@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMeth – Create Invoice</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1c6631;
+    --green-mid: #2d7a3a;
+    --green-light: #668621;
+    --green-grad: linear-gradient(90deg, #668621 0%, #1c6631 100%);
+    --white: #ffffff;
+    --bg: #f4f7f0;
+    --border: #c8ddb0;
+    --text: #1a2e1a;
+    --label: #3d5c2a;
+    --input-bg: #ffffff;
+    --shadow: 0 4px 24px rgba(28,102,49,0.10);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* HEADER */
+  header {
+    background: var(--green-grad);
+    padding: 0 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 16px rgba(28,102,49,0.25);
+  }
+  header .brand { display: flex; flex-direction: column; }
+  header .brand .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.5px;
+  }
+  header .brand .tagline {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  header .header-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+  }
+
+  /* LAYOUT */
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--green-light);
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 32px 32px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(102,134,33,0.1);
+  }
+
+  /* OPTIONAL CARD TOGGLE */
+  .card-collapsible .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .card-collapsible .card-header .toggle-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--green-dark);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .card-collapsible .card-header .toggle-btn:hover {
+    background: var(--green-dark);
+    color: #fff;
+  }
+  .card-collapsible .card-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s;
+    opacity: 0;
+    margin-top: 0;
+  }
+  .card-collapsible .card-body.open {
+    max-height: 400px;
+    opacity: 1;
+    margin-top: 24px;
+  }
+  .optional-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #aab;
+    border: 1px solid #dde;
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .span-2 { grid-column: 1 / -1; }
+
+  /* FORM ELEMENTS */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--label);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(45,122,58,0.12);
+  }
+  input[readonly] {
+    background: #f0f5ea;
+    color: var(--green-dark);
+    font-weight: 600;
+    cursor: default;
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231c6631' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* PRODUCT TABLE */
+  .products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .products-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  /* ADDED: product counter badge */
+  .product-counter {
+    font-size: 12px;
+    font-weight: 600;
+    color: #668;
+    background: #f0f5ea;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
+  .product-counter.at-limit {
+    color: #c0392b;
+    background: #fdf0ee;
+    border-color: #f5c6c0;
+  }
+
+  .btn-add {
+    background: var(--green-grad);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: opacity 0.2s, transform 0.15s, background 0.2s;
+  }
+  .btn-add:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  /* ADDED: disabled state when limit reached */
+  .btn-add:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+  }
+
+  .product-table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--green-grad); }
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; text-align: center; }
+
+  tbody tr { border-bottom: 1px solid #eef3e8; transition: background 0.15s; }
+  tbody tr:hover { background: #f9fcf5; }
+  tbody td { padding: 10px 10px; vertical-align: middle; }
+
+  tbody td input, tbody td select {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+  .td-total {
+    font-weight: 700;
+    color: var(--green-dark);
+    font-size: 14px;
+    text-align: right;
+    padding-right: 14px;
+    white-space: nowrap;
+  }
+  .td-del { text-align: center; }
+  .btn-del {
+    background: none;
+    border: 1.5px solid #e74c3c;
+    color: #e74c3c;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-del:hover { background: #e74c3c; color: #fff; }
+
+  .empty-row td {
+    text-align: center;
+    color: #aab;
+    font-size: 13px;
+    padding: 28px;
+    font-style: italic;
+  }
+
+  /* TOTALS */
+  .totals-wrap { display: flex; justify-content: flex-end; }
+  .totals-box {
+    background: #f0f5ea;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px 28px;
+    min-width: 260px;
+  }
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed #d0e4b5;
+  }
+  .totals-row:last-child { border-bottom: none; }
+  .totals-row .t-label { color: #556; font-weight: 500; }
+  .totals-row .t-val { font-weight: 700; color: var(--green-dark); }
+  .totals-row.grand { font-size: 17px; margin-top: 4px; }
+  .totals-row.grand .t-label { color: var(--green-dark); font-weight: 700; }
+  .totals-row.grand .t-val { font-size: 20px; }
+
+  /* TERMS */
+  .terms-note {
+    font-size: 12px;
+    color: #778;
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+
+  /* SUBMIT */
+  .actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 8px; }
+  .btn-reset {
+    background: #fff;
+    color: var(--green-dark);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-reset:hover { background: #f0f5ea; border-color: var(--green-mid); }
+  .btn-preview {
+    background: var(--green-grad);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 4px 16px rgba(28,102,49,0.25);
+  }
+  .btn-preview:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--green-dark);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* TAX INPUT */
+  .tax-field { display: flex; align-items: center; gap: 10px; }
+  .tax-field input { width: 80px; }
+  .tax-field label { white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="name">NutriMeth</span>
+    <span class="tagline">Pure By Nature · Trusted By You</span>
+  </div>
+  <span class="header-badge">Invoice Creator</span>
+</header>
+
+<div class="page">
+
+  <!-- CLIENT -->
+  <div class="card">
+    <div class="section-title">Bill To — Client Information</div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="clientName">Client Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Ahmed Khan" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="clientPhone">Phone Number</label>
+        <input type="text" id="clientPhone" placeholder="e.g. 0300-1234567">
+      </div>
+      <div class="field span-2">
+        <label for="clientAddress">Client Address</label>
+        <textarea id="clientAddress" placeholder="Full billing address…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVOICE META -->
+  <div class="card">
+    <div class="section-title">Invoice Details</div>
+    <div class="grid-3">
+      <div class="field">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input type="text" id="invoiceNumber" readonly>
+      </div>
+      <div class="field">
+        <label for="invoiceDate">Invoice Date</label>
+        <input type="text" id="invoiceDate" readonly>
+      </div>
+      <div class="field">
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate">
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="card">
+    <div class="products-header">
+      <div class="section-title" style="margin-bottom:0">Products</div>
+      <div class="products-header-right">
+        <!-- ADDED: live counter badge -->
+        <span class="product-counter" id="productCounter">0 / 8</span>
+        <!-- ADDED: button becomes disabled at limit -->
+        <button class="btn-add" id="btnAddProduct" onclick="addRow()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Add Product
+        </button>
+      </div>
+    </div>
+    <div class="product-table-wrap">
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th style="width:40%">Item Description</th>
+            <th style="width:15%">Qty</th>
+            <th style="width:18%">Unit Price</th>
+            <th style="width:18%">Total</th>
+            <th style="width:9%">Del</th>
+          </tr>
+        </thead>
+        <tbody id="productBody">
+          <tr class="empty-row" id="emptyRow">
+            <td colspan="5">No products added yet. Click "Add Product" to start.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAX + TOTALS -->
+  <div class="card">
+    <div class="section-title">Summary</div>
+    <div class="grid-2">
+      <div>
+        <div class="field" style="margin-bottom:16px">
+          <label>Tax / VAT Rate (%)</label>
+          <div class="tax-field">
+            <input type="number" id="taxRate" value="10" min="0" max="100" step="0.5" oninput="calcTotals()">
+            <span style="color:#668; font-size:13px">%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Terms &amp; Conditions</label>
+          <textarea id="termsText" placeholder="e.g. Payment due within 10 days. All sales are final."></textarea>
+        </div>
+      </div>
+      <div class="totals-wrap" style="align-items:flex-start;padding-top:4px">
+        <div class="totals-box">
+          <div class="totals-row">
+            <span class="t-label">Sub Total</span>
+            <span class="t-val" id="dispSubtotal">Rs. 0.00</span>
+          </div>
+          <div class="totals-row">
+            <span class="t-label">Tax (<span id="dispTaxPct">8</span>%)</span>
+            <span class="t-val" id="dispTax">Rs. 0.00</span>
+          </div>
+          <div class="totals-row grand">
+            <span class="t-label">Grand Total</span>
+            <span class="t-val" id="dispTotal">Rs. 0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT DETAILS (always shown, with default placeholder hints) -->
+  <div class="card">
+    <div class="section-title">Contact Details</div>
+    <div class="grid-2">
+      <div class="field" style="margin-bottom:16px">
+        <label>WhatsApp / Phone</label>
+        <input type="text" id="contactPhone" placeholder="03368936834">
+      </div>
+      <div class="field" style="margin-bottom:16px">
+        <label>Email</label>
+        <input type="email" id="contactEmail" placeholder="nutrimethofficial@gmail.com">
+      </div>
+      <div class="field" style="margin-bottom:16px">
+        <label>Website</label>
+        <input type="text" id="contactWeb" placeholder="www.nutrimeth.com">
+      </div>
+      <div class="field">
+        <label>Office Address</label>
+        <input type="text" id="contactAddr" placeholder="Scheme 33 post office society">
+      </div>
+    </div>
+    <p class="terms-note" style="margin-top:12px">
+      Leave blank to use default NutriMeth contact details on the invoice.
+    </p>
+  </div>
+
+  <!-- BANK DETAILS — OPTIONAL (collapsible) -->
+  <div class="card card-collapsible">
+    <div class="card-header" onclick="toggleBankCard()">
+      <div class="section-title" style="margin-bottom:0">
+        Bank Details
+        <span class="optional-badge">Optional</span>
+      </div>
+      <button class="toggle-btn" id="bankToggleBtn" type="button">+ Add Bank Details</button>
+    </div>
+    <div class="card-body" id="bankCardBody">
+      <div class="grid-2">
+        <div class="field">
+          <label>Account Number</label>
+          <input type="text" id="bankAccount" placeholder="e.g. PK36HABB0000000020010069">
+        </div>
+        <div class="field">
+          <label>Virtual / IBAN Number</label>
+          <input type="text" id="bankVirtual" placeholder="e.g. abc-01234567">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-reset" onclick="resetForm()">Clear Form</button>
+    <button class="btn-preview" onclick="saveAndPreview()">Save &amp; Preview Invoice →</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────────────────────────────────────
+   CONSTANTS
+───────────────────────────────────────── */
+const MAX_PRODUCTS = 8; // ADDED: hard product limit
+
+const PRODUCTS = {
+  "Castor Oil":          { price: 850,  group: "Hair Oils" },
+  "Onion Oil":           { price: 950,  group: "Hair Oils" },
+  "Almond Oil":          { price: 1100, group: "Hair Oils" },
+  "Argan Oil":           { price: 1400, group: "Hair Oils" },
+  "Rosemary Oil":        { price: 900,  group: "Hair Oils" },
+  "Mustard Oil":         { price: 700,  group: "Food Oils" },
+  "Coconut Oil (Food)":  { price: 1200, group: "Food Oils" },
+  "Olive Oil":           { price: 1600, group: "Food Oils" },
+  "Sunflower Oil":       { price: 650,  group: "Food Oils" },
+  "Sesame Oil":          { price: 1050, group: "Food Oils" },
+};
+
+let rows = [];
+let rowCounter = 0;
+
+/* ─────────────────────────────────────────
+   BANK CARD TOGGLE
+───────────────────────────────────────── */
+function toggleBankCard() {
+  const body = document.getElementById('bankCardBody');
+  const btn  = document.getElementById('bankToggleBtn');
+  const isOpen = body.classList.toggle('open');
+  btn.textContent = isOpen ? '− Hide Bank Details' : '+ Add Bank Details';
+}
+
+/* ─────────────────────────────────────────
+   PRODUCT COUNTER UI
+───────────────────────────────────────── */
+function updateProductCounter() {
+  const counter = document.getElementById('productCounter');
+  const addBtn  = document.getElementById('btnAddProduct');
+  const count   = rows.length;
+
+  counter.textContent = `${count} / ${MAX_PRODUCTS}`;
+  counter.classList.toggle('at-limit', count >= MAX_PRODUCTS);
+
+  // ADDED: disable add button at limit
+  addBtn.disabled = count >= MAX_PRODUCTS;
+  addBtn.title    = count >= MAX_PRODUCTS
+    ? `Maximum ${MAX_PRODUCTS} products allowed per invoice`
+    : '';
+}
+
+/* ─────────────────────────────────────────
+   PRODUCTS
+───────────────────────────────────────── */
+function buildProductOptions() {
+  const groups = {};
+  for (const [name, data] of Object.entries(PRODUCTS)) {
+    if (!groups[data.group]) groups[data.group] = [];
+    groups[data.group].push(name);
+  }
+  let html = '<option value="">— Select Product —</option>';
+  for (const [grp, items] of Object.entries(groups)) {
+    html += `<optgroup label="${grp}">`;
+    items.forEach(n => html += `<option value="${n}">${n} — Rs. ${PRODUCTS[n].price.toLocaleString()}</option>`);
+    html += '</optgroup>';
+  }
+  return html;
+}
+
+function addRow() {
+  // ADDED: enforce limit before adding
+  if (rows.length >= MAX_PRODUCTS) {
+    showToast(`⚠ Maximum ${MAX_PRODUCTS} products per invoice. Remove a row to add another.`);
+    return;
+  }
+  const id = ++rowCounter;
+  rows.push({ id, product: '', qty: 1, price: 0 });
+  renderRows();
+  calcTotals();
+}
+
+function deleteRow(id) {
+  rows = rows.filter(r => r.id !== id);
+  renderRows();
+  calcTotals();
+}
+
+function onProductChange(id, sel) {
+  const row = rows.find(r => r.id === id);
+  row.product = sel.value;
+  row.price = sel.value ? PRODUCTS[sel.value].price : 0;
+  const tr = document.getElementById(`row-${id}`);
+  tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
+  calcRowTotal(id);
+  calcTotals();
+}
+
+function onQtyChange(id, inp) {
+  const row = rows.find(r => r.id === id);
+  row.qty = Math.max(1, parseInt(inp.value) || 1);
+  inp.value = row.qty;
+  calcRowTotal(id);
+  calcTotals();
+}
+
+function calcRowTotal(id) {
+  const row = rows.find(r => r.id === id);
+  const total = row.price * row.qty;
+  document.getElementById(`total-${id}`).textContent = 'Rs. ' + total.toLocaleString('en-PK', {minimumFractionDigits:2});
+}
+
+function renderRows() {
+  const tbody    = document.getElementById('productBody');
+  const emptyRow = document.getElementById('emptyRow');
+
+  tbody.querySelectorAll('tr[data-row]').forEach(r => r.remove());
+
+  if (rows.length === 0) {
+    emptyRow.style.display = '';
+    updateProductCounter();
+    return;
+  }
+  emptyRow.style.display = 'none';
+
+  const opts = buildProductOptions();
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.id = `row-${row.id}`;
+    tr.setAttribute('data-row', row.id);
+    tr.innerHTML = `
+      <td>
+        <select onchange="onProductChange(${row.id}, this)">${opts}</select>
+      </td>
+      <td><input type="number" value="${row.qty}" min="1" style="width:70px;text-align:center" onchange="onQtyChange(${row.id},this)" oninput="onQtyChange(${row.id},this)"></td>
+      <td><input type="text" class="price-input" value="${row.price ? 'Rs. '+row.price.toLocaleString() : ''}" readonly></td>
+      <td class="td-total" id="total-${row.id}">Rs. 0.00</td>
+      <td class="td-del"><button class="btn-del" onclick="deleteRow(${row.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    if (row.product) {
+      tr.querySelector('select').value = row.product;
+    }
+    calcRowTotal(row.id);
+  });
+
+  updateProductCounter(); // ADDED
+}
+
+function calcTotals() {
+  const tax = parseFloat(document.getElementById('taxRate').value) || 0;
+  document.getElementById('dispTaxPct').textContent = tax;
+  let sub = 0;
+  rows.forEach(r => sub += r.price * r.qty);
+  const taxAmt = sub * tax / 100;
+  const total  = sub + taxAmt;
+  const fmt = v => 'Rs. ' + v.toLocaleString('en-PK', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('dispSubtotal').textContent = fmt(sub);
+  document.getElementById('dispTax').textContent      = fmt(taxAmt);
+  document.getElementById('dispTotal').textContent    = fmt(total);
+}
+
+/* ─────────────────────────────────────────
+   AUTO INVOICE NUMBER + DATE
+───────────────────────────────────────── */
+function initMeta() {
+  const stored = localStorage.getItem('nm_inv_counter');
+  const num  = stored ? parseInt(stored) : 122;
+  const next = num + 1;
+  localStorage.setItem('nm_inv_counter', next);
+  document.getElementById('invoiceNumber').value = 'INV-' + String(next).padStart(6, '0');
+
+  const now = new Date();
+  const fmt = d => d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}).replace(/ /g,' ');
+  document.getElementById('invoiceDate').value = fmt(now);
+  const due = new Date(now); due.setDate(due.getDate() + 10);
+  document.getElementById('dueDate').valueAsDate = due;
+
+  // Prefill contact + bank from previous save
+  const prev = JSON.parse(localStorage.getItem('nm_invoice_data') || '{}');
+  if (prev.contactPhone) document.getElementById('contactPhone').value = prev.contactPhone;
+  if (prev.contactEmail) document.getElementById('contactEmail').value = prev.contactEmail;
+  if (prev.contactWeb)   document.getElementById('contactWeb').value   = prev.contactWeb;
+  if (prev.contactAddr)  document.getElementById('contactAddr').value  = prev.contactAddr;
+
+  // MODIFIED: bank fields only prefill if card is opened
+  if (prev.bankAccount || prev.bankVirtual) {
+    // Auto-open bank card if there was previous bank data
+    const body = document.getElementById('bankCardBody');
+    const btn  = document.getElementById('bankToggleBtn');
+    body.classList.add('open');
+    btn.textContent = '− Hide Bank Details';
+    if (prev.bankAccount) document.getElementById('bankAccount').value = prev.bankAccount;
+    if (prev.bankVirtual) document.getElementById('bankVirtual').value = prev.bankVirtual;
+  }
+
+  if (prev.termsText) document.getElementById('termsText').value = prev.termsText;
+
+  updateProductCounter(); // ADDED: init counter
+}
+
+/* ─────────────────────────────────────────
+   SAVE + PREVIEW
+───────────────────────────────────────── */
+function saveAndPreview() {
+  const clientName    = document.getElementById('clientName').value.trim();
+  const clientPhone   = document.getElementById('clientPhone').value.trim();
+  const clientAddress = document.getElementById('clientAddress').value.trim();
+
+  if (!clientName)       { showToast('⚠ Please enter client name.');         return; }
+  if (rows.length === 0) { showToast('⚠ Add at least one product.');          return; }
+  if (rows.some(r => !r.product)) { showToast('⚠ All rows must have a product selected.'); return; }
+
+  const tax = parseFloat(document.getElementById('taxRate').value) || 0;
+  let subtotal = 0;
+  rows.forEach(r => subtotal += r.price * r.qty);
+  const taxAmt     = subtotal * tax / 100;
+  const grandTotal = subtotal + taxAmt;
+
+  const data = {
+    invoiceNumber: document.getElementById('invoiceNumber').value,
+    invoiceDate:   document.getElementById('invoiceDate').value,
+    dueDate:       document.getElementById('dueDate').value,
+    clientName, clientPhone, clientAddress,
+    rows: rows.map(r => ({
+      product: r.product, qty: r.qty, price: r.price,
+      total: r.price * r.qty
+    })),
+    taxRate: tax,
+    subtotal, taxAmt, grandTotal,
+    // MODIFIED: bank details saved only if provided (optional)
+    bankAccount:  document.getElementById('bankAccount').value.trim(),
+    bankVirtual:  document.getElementById('bankVirtual').value.trim(),
+    termsText:    document.getElementById('termsText').value.trim(),
+    contactPhone: document.getElementById('contactPhone').value.trim(),
+    contactEmail: document.getElementById('contactEmail').value.trim(),
+    contactWeb:   document.getElementById('contactWeb').value.trim(),
+    contactAddr:  document.getElementById('contactAddr').value.trim(),
+  };
+
+  localStorage.setItem('nm_invoice_data', JSON.stringify(data));
+  showToast('✓ Saved! Opening invoice…');
+  setTimeout(() => window.open('invoice.html', '_blank'), 700);
+}
+
+function resetForm() {
+  if (!confirm('Clear all form data?')) return;
+  rows = [];
+  renderRows();
+  calcTotals();
+  ['clientName','clientPhone','clientAddress','termsText',
+   'contactPhone','contactEmail','contactWeb','contactAddr',
+   'bankAccount','bankVirtual'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  // Close bank card
+  document.getElementById('bankCardBody').classList.remove('open');
+  document.getElementById('bankToggleBtn').textContent = '+ Add Bank Details';
+  showToast('Form cleared.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ─────────────────────────────────────────
+   INIT
+───────────────────────────────────────── */
+initMeta();
+</script>
+</body>
+</html>
