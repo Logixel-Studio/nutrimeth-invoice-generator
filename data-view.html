@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMeth – Invoice Data</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1c6631;
+    --green-mid: #2d7a3a;
+    --green-light: #668621;
+    --green-grad: linear-gradient(90deg, #668621 0%, #1c6631 100%);
+    --bg: #f4f7f0;
+    --border: #c8ddb0;
+    --text: #1a2e1a;
+    --label: #3d5c2a;
+    --shadow: 0 4px 24px rgba(28,102,49,0.10);
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
+
+  header {
+    background: var(--green-grad);
+    padding: 0 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 16px rgba(28,102,49,0.25);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  header .brand .name { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; }
+  header .brand .tagline { font-size: 11px; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .btn-header {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-header:hover { background: rgba(255,255,255,0.3); }
+  .header-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* SEARCH BAR */
+  .search-bar {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 20px 28px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(102,134,33,0.1);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-bar input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-bar input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,122,58,0.12); }
+  .search-bar select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 36px 10px 14px;
+    outline: none;
+    appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231c6631' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    cursor: pointer;
+  }
+  .btn-search {
+    background: var(--green-grad);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .btn-search:hover { opacity: 0.88; }
+  .results-count { font-size: 13px; color: #778; margin-left: auto; white-space: nowrap; }
+
+  /* TABLE */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(102,134,33,0.1);
+    overflow: hidden;
+  }
+
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table thead tr { background: var(--green-grad); }
+  .data-table thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .data-table tbody tr.main-row {
+    border-bottom: 1px solid #eef3e8;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .data-table tbody tr.main-row:hover { background: #f2f9ee; }
+  .data-table tbody tr.main-row.expanded { background: #eef7e6; }
+  .data-table tbody td {
+    padding: 14px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .expand-icon { font-size: 12px; color: #668; transition: transform 0.2s; display: inline-block; }
+  .expanded .expand-icon { transform: rotate(90deg); }
+
+  /* EXPAND ROW */
+  .detail-row td {
+    padding: 0 !important;
+    background: #f8fcf4 !important;
+    border-bottom: 2px solid var(--border) !important;
+  }
+  .detail-inner {
+    padding: 24px 32px;
+    display: none;
+    animation: slideDown 0.2s ease;
+  }
+  .detail-inner.open { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .detail-item { display: flex; flex-direction: column; gap: 2px; }
+  .detail-item .dl { font-size: 11px; font-weight: 600; color: #778; letter-spacing: 0.5px; text-transform: uppercase; }
+  .detail-item .dv { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  .products-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green-light); margin-bottom: 10px; }
+  .products-mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .products-mini-table thead tr { background: #eaf2df; }
+  .products-mini-table thead th { padding: 8px 12px; text-align: left; font-weight: 600; color: var(--green-dark); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .products-mini-table tbody tr { border-bottom: 1px solid #e0edd0; }
+  .products-mini-table tbody td { padding: 8px 12px; }
+  .products-mini-table tbody tr:last-child { border-bottom: none; }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-Paid    { background: #e8f5e9; color: #1c6631; border: 1px solid #a5d6a7; }
+  .badge-Unpaid  { background: #fdecea; color: #c0392b; border: 1px solid #f5c6c0; }
+  .badge-Partial { background: #fff8e1; color: #c07800; border: 1px solid #ffe082; }
+
+  /* EMPTY / ERROR STATES */
+  .state-box {
+    padding: 60px 32px;
+    text-align: center;
+    color: #778;
+  }
+  .state-box h3 { font-size: 20px; margin-bottom: 8px; color: #445; }
+  .state-box p  { font-size: 14px; }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border: 3px solid rgba(28,102,49,0.2);
+    border-top-color: var(--green-dark);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 700px) {
+    header { height: auto; padding: 12px 16px; }
+    .page { padding: 20px 12px 60px; }
+    .search-bar { padding: 14px 16px; }
+    .data-table thead th:nth-child(3),
+    .data-table tbody td:nth-child(3) { display: none; }
+  }
+
+  @media (max-width: 600px) {
+
+  /* hide table header */
+  .products-mini-table thead {
+    display: none;
+  }
+
+  /* each row = card */
+  .products-mini-table tbody tr {
+    display: block;
+    background: #f8faf4;
+    border: 1px solid #c8ddb0;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* each cell */
+  .products-mini-table tbody td {
+    display: block;
+    padding: 5px 0;
+    font-size: 13px;
+    text-align: left !important;
+  }
+
+  /* label before value */
+  .products-mini-table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    color: #778;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* total highlight */
+  .products-mini-table tbody td:last-child {
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+}
+
+/* ============================= */
+/* MOBILE RESPONSIVE TABLE FIX  */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  /* hide header */
+  .data-table thead {
+    display: none;
+  }
+
+  /* each row = card */
+  .data-table tbody tr.main-row {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  }
+
+  .data-table tbody tr.main-row td {
+    display: block;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+
+  /* label system */
+  .data-table tbody tr.main-row td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #778;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  /* expand icon fix */
+  .expand-icon {
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  /* detail row full width */
+  .detail-row td {
+    padding: 0 !important;
+  }
+
+  .detail-inner {
+    padding: 16px;
+  }
+
+  /* search bar stacking */
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar input,
+  .search-bar select,
+  .btn-search {
+    width: 100%;
+  }
+
+  .results-count {
+    text-align: center;
+    margin-left: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="name">NutriMeth</div>
+    <div class="tagline">Invoice Data</div>
+  </div>
+  <div class="header-right">
+    <a class="btn-header" href="index.html">← Invoice Creator</a>
+    <span class="header-badge">View Data</span>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by client name or invoice number…" oninput="debouncedSearch()">
+    <select id="searchType">
+      <option value="client">By Client Name</option>
+      <option value="invoice">By Invoice #</option>
+    </select>
+    <button class="btn-search" onclick="doSearch()">Search</button>
+    <button class="btn-search" style="background:#f0f5ea;color:var(--green-dark);border:1.5px solid var(--border)" onclick="clearSearch()">Clear</button>
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:30px"></th>
+          <th>Invoice #</th>
+          <th>Client Name</th>
+          <th>Invoice Date</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td colspan="6">
+            <div class="state-box">
+              <span class="loading-spinner"></span> Loading invoices…
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="supabase.js"></script>
+<script>
+let allData = [];
+let expandedRow = null;
+let debounceTimer = null;
+
+function fmtMoney(v) {
+  return 'Rs. ' + Number(v || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
+}
+
+function fmtDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function escHtml(str) {
+  if (!str) return '—';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  document.getElementById('resultsCount').textContent = `${data.length} record${data.length !== 1 ? 's' : ''}`;
+
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><h3>No Invoices Found</h3><p>No records match your search.</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map((inv, i) => {
+    const status = inv.payment_status || 'Unpaid';
+    const products = Array.isArray(inv.product_details) ? inv.product_details : [];
+
+    const productRows = products.map(p => `
+      <tr>
+        <td>${escHtml(p.name)}</td>
+        <td>${escHtml(p.size || '—')}</td>
+        <td style="text-align:center">${p.qty || 1}</td>
+        <td style="text-align:right">${fmtMoney(p.price)}</td>
+        <td style="text-align:right;font-weight:700">${fmtMoney(p.total)}</td>
+      </tr>`).join('');
+
+    return `
+      <tr class="main-row" id="main-${i}" onclick="toggleRow(${i})">
+        <td><span class="expand-icon" id="icon-${i}">▶</span></td>
+        <td><strong>${escHtml(inv.invoice_number)}</strong></td>
+        <td>${escHtml(inv.client_name)}</td>
+        <td>${fmtDate(inv.invoice_date)}</td>
+        <td style="font-weight:700;color:var(--green-dark)">${fmtMoney(inv.total_price)}</td>
+        <td><span class="badge badge-${status}">${status}</span></td>
+      </tr>
+      <tr class="detail-row" id="detail-${i}">
+        <td colspan="6">
+          <div class="detail-inner" id="inner-${i}">
+            <div class="detail-grid">
+              <div class="detail-item"><span class="dl">Client Number</span><span class="dv">${escHtml(inv.client_number) || '—'}</span></div>
+              <div class="detail-item"><span class="dl">Client Address</span><span class="dv">${escHtml(inv.client_address) || '—'}</span></div>
+              <div class="detail-item"><span class="dl">Due Date</span><span class="dv">${fmtDate(inv.due_date)}</span></div>
+              <div class="detail-item"><span class="dl">Payment Status</span><span class="dv"><span class="badge badge-${status}">${status}</span></span></div>
+              <div class="detail-item"><span class="dl">Created At</span><span class="dv">${fmtDate(inv.created_at)}</span></div>
+            </div>
+            <div class="products-title">Product Details</div>
+            <table class="products-mini-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Size</th>
+                  <th>Qty</th>
+                  <th style="text-align:right">Unit Price</th>
+                  <th style="text-align:right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${productRows || '<tr><td colspan="5" style="color:#aab;font-style:italic;padding:8px 12px">No product details</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function toggleRow(i) {
+  const inner = document.getElementById(`inner-${i}`);
+  const mainRow = document.getElementById(`main-${i}`);
+  const icon = document.getElementById(`icon-${i}`);
+
+  if (expandedRow !== null && expandedRow !== i) {
+    // Close previously expanded
+    document.getElementById(`inner-${expandedRow}`).classList.remove('open');
+    document.getElementById(`main-${expandedRow}`).classList.remove('expanded');
+    document.getElementById(`icon-${expandedRow}`).style.transform = '';
+  }
+
+  if (inner.classList.contains('open')) {
+    inner.classList.remove('open');
+    mainRow.classList.remove('expanded');
+    icon.style.transform = '';
+    expandedRow = null;
+  } else {
+    inner.classList.add('open');
+    mainRow.classList.add('expanded');
+    icon.style.transform = 'rotate(90deg)';
+    expandedRow = i;
+  }
+}
+
+async function doSearch() {
+  const search = document.getElementById('searchInput').value.trim();
+  const type   = document.getElementById('searchType').value;
+  const tbody  = document.getElementById('tableBody');
+  expandedRow  = null;
+
+  tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><span class="loading-spinner"></span> Searching…</div></td></tr>`;
+
+  const result = await fetchInvoices({ search, searchType: type });
+  if (result.success) {
+    allData = result.data;
+    renderTable(allData);
+  } else {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><h3>Error</h3><p>${result.error || 'Could not load data.'}</p></div></td></tr>`;
+    document.getElementById('resultsCount').textContent = '';
+  }
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  doSearch();
+}
+
+function debouncedSearch() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(doSearch, 400);
+}
+
+// Initial load
+doSearch();
+</script>
+</body>
+</html>

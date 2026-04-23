@@ -39,6 +39,8 @@
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 2px 16px rgba(28,102,49,0.25);
+    flex-wrap: wrap;
+    gap: 8px;
   }
   header .brand { display: flex; flex-direction: column; }
   header .brand .name {
@@ -55,6 +57,12 @@
     text-transform: uppercase;
     margin-top: 2px;
   }
+  header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   header .header-badge {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);
@@ -66,6 +74,23 @@
     padding: 6px 16px;
     border-radius: 20px;
   }
+  .btn-header {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-header:hover { background: rgba(255,255,255,0.3); }
 
   /* LAYOUT */
   .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
@@ -122,7 +147,7 @@
     margin-top: 0;
   }
   .card-collapsible .card-body.open {
-    max-height: 400px;
+    max-height: 600px;
     opacity: 1;
     margin-top: 24px;
   }
@@ -192,7 +217,6 @@
     align-items: center;
     gap: 12px;
   }
-  /* ADDED: product counter badge */
   .product-counter {
     font-size: 12px;
     font-weight: 600;
@@ -225,7 +249,6 @@
     transition: opacity 0.2s, transform 0.15s, background 0.2s;
   }
   .btn-add:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
-  /* ADDED: disabled state when limit reached */
   .btn-add:disabled {
     background: #ccc;
     cursor: not-allowed;
@@ -314,7 +337,6 @@
   .totals-row.grand .t-label { color: var(--green-dark); font-weight: 700; }
   .totals-row.grand .t-val { font-size: 20px; }
 
-  /* TERMS */
   .terms-note {
     font-size: 12px;
     color: #778;
@@ -323,7 +345,7 @@
   }
 
   /* SUBMIT */
-  .actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 8px; }
+  .actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
   .btn-reset {
     background: #fff;
     color: var(--green-dark);
@@ -370,6 +392,7 @@
     transition: opacity 0.3s, transform 0.3s;
     pointer-events: none;
     z-index: 999;
+    max-width: calc(100vw - 60px);
   }
   .toast.show { opacity: 1; transform: translateY(0); }
 
@@ -377,6 +400,89 @@
   .tax-field { display: flex; align-items: center; gap: 10px; }
   .tax-field input { width: 80px; }
   .tax-field label { white-space: nowrap; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header { height: auto; padding: 12px 16px; }
+    .page { padding: 20px 12px 60px; }
+    .card { padding: 20px 16px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .span-2 { grid-column: 1; }
+    thead th, tbody td { padding: 8px 6px; font-size: 11px; }
+    .btn-preview, .btn-reset { padding: 12px 18px; font-size: 13px; }
+    .totals-box { min-width: 100%; }
+    .totals-wrap { justify-content: stretch; }
+  }
+
+
+  @media (max-width: 600px) {
+
+  /* table hide header */
+  #productTable thead {
+    display: none;
+  }
+
+  /* each row = card */
+  #productTable tbody tr {
+    display: block;
+    background: #f8faf4;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  /* each cell = row */
+  #productTable tbody td {
+    display: block;
+    padding: 4px 0;
+    font-size: 13px;
+    text-align: left !important;
+  }
+
+  /* labels before values */
+  #productTable tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    color: #778;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* inputs full width */
+  #productTable input,
+  #productTable select {
+    width: 100%;
+  }
+
+  /* total bold */
+  .td-total {
+    font-size: 15px;
+    margin-top: 6px;
+  }
+
+  /* delete button top right */
+  .td-del {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+  .btn-del {
+    width: 23px;
+    height: 23px;
+    font-size: 12px;
+    border-radius: 50%;
+    position: relative;
+    top: -17px;
+    right: -7px;
+  }
+
+}
+
+
 </style>
 </head>
 <body>
@@ -386,7 +492,11 @@
     <span class="name">NutriMeth</span>
     <span class="tagline">Pure By Nature · Trusted By You</span>
   </div>
-  <span class="header-badge">Invoice Creator</span>
+  <div class="header-right">
+    <a class="btn-header" href="editor.html">✏ Edit Form</a>
+    <a class="btn-header" href="data-view.html">📊 View Data</a>
+    <span class="header-badge">Invoice Creator</span>
+  </div>
 </header>
 
 <div class="page">
@@ -426,6 +536,14 @@
         <label for="dueDate">Due Date</label>
         <input type="date" id="dueDate">
       </div>
+      <div class="field">
+        <label for="paymentStatus">Payment Status</label>
+        <select id="paymentStatus">
+          <option value="Unpaid">Unpaid</option>
+          <option value="Paid">Paid</option>
+          <option value="Partial">Partial</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -434,9 +552,7 @@
     <div class="products-header">
       <div class="section-title" style="margin-bottom:0">Products</div>
       <div class="products-header-right">
-        <!-- ADDED: live counter badge -->
         <span class="product-counter" id="productCounter">0 / 8</span>
-        <!-- ADDED: button becomes disabled at limit -->
         <button class="btn-add" id="btnAddProduct" onclick="addRow()">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
           Add Product
@@ -447,16 +563,17 @@
       <table id="productTable">
         <thead>
           <tr>
-            <th style="width:40%">Item Description</th>
-            <th style="width:15%">Qty</th>
-            <th style="width:18%">Unit Price</th>
-            <th style="width:18%">Total</th>
-            <th style="width:9%">Del</th>
+            <th style="width:32%">Item Description</th>
+            <th style="width:14%">Size</th>
+            <th style="width:10%">Qty</th>
+            <th style="width:16%">Unit Price</th>
+            <th style="width:16%">Total</th>
+            <th style="width:8%">Del</th>
           </tr>
         </thead>
         <tbody id="productBody">
           <tr class="empty-row" id="emptyRow">
-            <td colspan="5">No products added yet. Click "Add Product" to start.</td>
+            <td colspan="6">No products added yet. Click "Add Product" to start.</td>
           </tr>
         </tbody>
       </table>
@@ -475,9 +592,15 @@
             <span style="color:#668; font-size:13px">%</span>
           </div>
         </div>
-        <div class="field">
-          <label>Terms &amp; Conditions</label>
-          <textarea id="termsText" placeholder="e.g. Payment due within 10 days. All sales are final."></textarea>
+        <!-- Terms & Conditions — optional collapsible -->
+        <div class="card-collapsible" style="box-shadow:none;border:none;padding:0;margin:0">
+          <div class="card-header" onclick="toggleTerms()" style="padding:0">
+            <label style="cursor:pointer">Terms &amp; Conditions <span class="optional-badge">Optional</span></label>
+            <button class="toggle-btn" id="termsToggleBtn" type="button">+ Add</button>
+          </div>
+          <div class="card-body" id="termsCardBody">
+            <textarea id="termsText" placeholder="e.g. Payment due within 10 days. All sales are final."></textarea>
+          </div>
         </div>
       </div>
       <div class="totals-wrap" style="align-items:flex-start;padding-top:4px">
@@ -487,7 +610,7 @@
             <span class="t-val" id="dispSubtotal">Rs. 0.00</span>
           </div>
           <div class="totals-row">
-            <span class="t-label">Tax (<span id="dispTaxPct">8</span>%)</span>
+            <span class="t-label">Tax (<span id="dispTaxPct">10</span>%)</span>
             <span class="t-val" id="dispTax">Rs. 0.00</span>
           </div>
           <div class="totals-row grand">
@@ -497,32 +620,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- CONTACT DETAILS (always shown, with default placeholder hints) -->
-  <div class="card">
-    <div class="section-title">Contact Details</div>
-    <div class="grid-2">
-      <div class="field" style="margin-bottom:16px">
-        <label>WhatsApp / Phone</label>
-        <input type="text" id="contactPhone" placeholder="03368936834">
-      </div>
-      <div class="field" style="margin-bottom:16px">
-        <label>Email</label>
-        <input type="email" id="contactEmail" placeholder="nutrimethofficial@gmail.com">
-      </div>
-      <div class="field" style="margin-bottom:16px">
-        <label>Website</label>
-        <input type="text" id="contactWeb" placeholder="www.nutrimeth.com">
-      </div>
-      <div class="field">
-        <label>Office Address</label>
-        <input type="text" id="contactAddr" placeholder="Scheme 33 post office society">
-      </div>
-    </div>
-    <p class="terms-note" style="margin-top:12px">
-      Leave blank to use default NutriMeth contact details on the invoice.
-    </p>
   </div>
 
   <!-- BANK DETAILS — OPTIONAL (collapsible) -->
@@ -557,13 +654,15 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="supabase.js"></script>
 <script>
 /* ─────────────────────────────────────────
-   CONSTANTS
+   CONSTANTS & DEFAULTS
 ───────────────────────────────────────── */
-const MAX_PRODUCTS = 8; // ADDED: hard product limit
+const MAX_PRODUCTS = 8;
+const MIN_PRICE = 0;
 
-const PRODUCTS = {
+const DEFAULT_PRODUCTS = {
   "Castor Oil":          { price: 850,  group: "Hair Oils" },
   "Onion Oil":           { price: 950,  group: "Hair Oils" },
   "Almond Oil":          { price: 1100, group: "Hair Oils" },
@@ -576,17 +675,63 @@ const PRODUCTS = {
   "Sesame Oil":          { price: 1050, group: "Food Oils" },
 };
 
+const DEFAULT_SIZES = ['50ml','100ml','150ml','250ml','500ml','1 Liter','5 Liter'];
+
+// Size multipliers (relative to base price)
+
+const SIZE_MULTIPLIERS = {
+  '50ml':    0.5,
+  '100ml':   1,
+  '150ml':   1.5,
+  '250ml':   2.5,
+  '500ml':   5,
+  '1 Liter': 10,
+  '5 Liter': 50,
+};
+
+let PRODUCTS = { ...DEFAULT_PRODUCTS };
+let SIZES = [...DEFAULT_SIZES];
+
 let rows = [];
 let rowCounter = 0;
 
 /* ─────────────────────────────────────────
-   BANK CARD TOGGLE
+   LOAD GLOBAL CONFIG FROM SUPABASE
+───────────────────────────────────────── */
+async function loadConfig() {
+  try {
+    const cfg = await loadGlobalConfig();
+    if (cfg) {
+      if (cfg.products) PRODUCTS = cfg.products;
+      if (cfg.sizes)    SIZES    = cfg.sizes;
+      // Contact details: only use if saved
+      if (cfg.contact) {
+        const c = cfg.contact;
+        const prev = JSON.parse(localStorage.getItem('nm_invoice_data') || '{}');
+        if (c.phone && !prev.contactPhone) document.getElementById('contactPhone') && (document.getElementById('contactPhone').value = c.phone);
+        if (c.email && !prev.contactEmail) document.getElementById('contactEmail') && (document.getElementById('contactEmail').value = c.email);
+        if (c.web   && !prev.contactWeb)   document.getElementById('contactWeb')   && (document.getElementById('contactWeb').value   = c.web);
+        if (c.addr  && !prev.contactAddr)  document.getElementById('contactAddr')  && (document.getElementById('contactAddr').value  = c.addr);
+      }
+    }
+  } catch(e) { console.warn('Config load error:', e); }
+}
+
+/* ─────────────────────────────────────────
+   TOGGLES
 ───────────────────────────────────────── */
 function toggleBankCard() {
   const body = document.getElementById('bankCardBody');
   const btn  = document.getElementById('bankToggleBtn');
   const isOpen = body.classList.toggle('open');
   btn.textContent = isOpen ? '− Hide Bank Details' : '+ Add Bank Details';
+}
+
+function toggleTerms() {
+  const body = document.getElementById('termsCardBody');
+  const btn  = document.getElementById('termsToggleBtn');
+  const isOpen = body.classList.toggle('open');
+  btn.textContent = isOpen ? '− Hide' : '+ Add';
 }
 
 /* ─────────────────────────────────────────
@@ -596,15 +741,10 @@ function updateProductCounter() {
   const counter = document.getElementById('productCounter');
   const addBtn  = document.getElementById('btnAddProduct');
   const count   = rows.length;
-
   counter.textContent = `${count} / ${MAX_PRODUCTS}`;
   counter.classList.toggle('at-limit', count >= MAX_PRODUCTS);
-
-  // ADDED: disable add button at limit
   addBtn.disabled = count >= MAX_PRODUCTS;
-  addBtn.title    = count >= MAX_PRODUCTS
-    ? `Maximum ${MAX_PRODUCTS} products allowed per invoice`
-    : '';
+  addBtn.title = count >= MAX_PRODUCTS ? `Maximum ${MAX_PRODUCTS} products allowed per invoice` : '';
 }
 
 /* ─────────────────────────────────────────
@@ -619,20 +759,28 @@ function buildProductOptions() {
   let html = '<option value="">— Select Product —</option>';
   for (const [grp, items] of Object.entries(groups)) {
     html += `<optgroup label="${grp}">`;
-    items.forEach(n => html += `<option value="${n}">${n} — Rs. ${PRODUCTS[n].price.toLocaleString()}</option>`);
+    items.forEach(n => html += `<option value="${n}">${n}</option>`);
     html += '</optgroup>';
   }
   return html;
 }
 
+function buildSizeOptions() {
+  return SIZES.map(s => `<option value="${s}">${s}</option>`).join('');
+}
+
+function getPriceForSize(basePrice, size) {
+  const mult = SIZE_MULTIPLIERS[size] || 1;
+  return Math.max(MIN_PRICE, Math.round(basePrice * mult));
+}
+
 function addRow() {
-  // ADDED: enforce limit before adding
   if (rows.length >= MAX_PRODUCTS) {
     showToast(`⚠ Maximum ${MAX_PRODUCTS} products per invoice. Remove a row to add another.`);
     return;
   }
   const id = ++rowCounter;
-  rows.push({ id, product: '', qty: 1, price: 0 });
+  rows.push({ id, product: '', size: SIZES[1] || '100ml', qty: 1, price: 0 });
   renderRows();
   calcTotals();
 }
@@ -646,7 +794,20 @@ function deleteRow(id) {
 function onProductChange(id, sel) {
   const row = rows.find(r => r.id === id);
   row.product = sel.value;
-  row.price = sel.value ? PRODUCTS[sel.value].price : 0;
+  const basePrice = sel.value ? PRODUCTS[sel.value].price : 0;
+  row.price = basePrice ? getPriceForSize(basePrice, row.size) : 0;
+  const tr = document.getElementById(`row-${id}`);
+  tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
+  calcRowTotal(id);
+  calcTotals();
+}
+
+function onSizeChange(id, sel) {
+  const row = rows.find(r => r.id === id);
+  row.size = sel.value;
+  if (row.product && PRODUCTS[row.product]) {
+    row.price = getPriceForSize(PRODUCTS[row.product].price, row.size);
+  }
   const tr = document.getElementById(`row-${id}`);
   tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
   calcRowTotal(id);
@@ -681,6 +842,7 @@ function renderRows() {
   emptyRow.style.display = 'none';
 
   const opts = buildProductOptions();
+  const sizeOpts = buildSizeOptions();
   rows.forEach(row => {
     const tr = document.createElement('tr');
     tr.id = `row-${row.id}`;
@@ -689,19 +851,23 @@ function renderRows() {
       <td>
         <select onchange="onProductChange(${row.id}, this)">${opts}</select>
       </td>
-      <td><input type="number" value="${row.qty}" min="1" style="width:70px;text-align:center" onchange="onQtyChange(${row.id},this)" oninput="onQtyChange(${row.id},this)"></td>
+      <td>
+        <select onchange="onSizeChange(${row.id}, this)">${sizeOpts}</select>
+      </td>
+      <td><input type="number" value="${row.qty}" min="1" style="width:60px;text-align:center" onchange="onQtyChange(${row.id},this)" oninput="onQtyChange(${row.id},this)"></td>
       <td><input type="text" class="price-input" value="${row.price ? 'Rs. '+row.price.toLocaleString() : ''}" readonly></td>
       <td class="td-total" id="total-${row.id}">Rs. 0.00</td>
       <td class="td-del"><button class="btn-del" onclick="deleteRow(${row.id})">✕</button></td>
     `;
     tbody.appendChild(tr);
-    if (row.product) {
-      tr.querySelector('select').value = row.product;
-    }
+    if (row.product) tr.querySelector('select').value = row.product;
+    // Set size
+    const sizeSel = tr.querySelectorAll('select')[1];
+    if (sizeSel && row.size) sizeSel.value = row.size;
     calcRowTotal(row.id);
   });
 
-  updateProductCounter(); // ADDED
+  updateProductCounter();
 }
 
 function calcTotals() {
@@ -733,16 +899,8 @@ function initMeta() {
   const due = new Date(now); due.setDate(due.getDate() + 10);
   document.getElementById('dueDate').valueAsDate = due;
 
-  // Prefill contact + bank from previous save
   const prev = JSON.parse(localStorage.getItem('nm_invoice_data') || '{}');
-  if (prev.contactPhone) document.getElementById('contactPhone').value = prev.contactPhone;
-  if (prev.contactEmail) document.getElementById('contactEmail').value = prev.contactEmail;
-  if (prev.contactWeb)   document.getElementById('contactWeb').value   = prev.contactWeb;
-  if (prev.contactAddr)  document.getElementById('contactAddr').value  = prev.contactAddr;
-
-  // MODIFIED: bank fields only prefill if card is opened
   if (prev.bankAccount || prev.bankVirtual) {
-    // Auto-open bank card if there was previous bank data
     const body = document.getElementById('bankCardBody');
     const btn  = document.getElementById('bankToggleBtn');
     body.classList.add('open');
@@ -751,15 +909,13 @@ function initMeta() {
     if (prev.bankVirtual) document.getElementById('bankVirtual').value = prev.bankVirtual;
   }
 
-  if (prev.termsText) document.getElementById('termsText').value = prev.termsText;
-
-  updateProductCounter(); // ADDED: init counter
+  updateProductCounter();
 }
 
 /* ─────────────────────────────────────────
    SAVE + PREVIEW
 ───────────────────────────────────────── */
-function saveAndPreview() {
+async function saveAndPreview() {
   const clientName    = document.getElementById('clientName').value.trim();
   const clientPhone   = document.getElementById('clientPhone').value.trim();
   const clientAddress = document.getElementById('clientAddress').value.trim();
@@ -774,28 +930,45 @@ function saveAndPreview() {
   const taxAmt     = subtotal * tax / 100;
   const grandTotal = subtotal + taxAmt;
 
+  const paymentStatus = document.getElementById('paymentStatus').value;
+
   const data = {
     invoiceNumber: document.getElementById('invoiceNumber').value,
     invoiceDate:   document.getElementById('invoiceDate').value,
     dueDate:       document.getElementById('dueDate').value,
     clientName, clientPhone, clientAddress,
+    paymentStatus,
     rows: rows.map(r => ({
-      product: r.product, qty: r.qty, price: r.price,
+      product: r.product, size: r.size, qty: r.qty, price: r.price,
       total: r.price * r.qty
     })),
     taxRate: tax,
     subtotal, taxAmt, grandTotal,
-    // MODIFIED: bank details saved only if provided (optional)
     bankAccount:  document.getElementById('bankAccount').value.trim(),
     bankVirtual:  document.getElementById('bankVirtual').value.trim(),
     termsText:    document.getElementById('termsText').value.trim(),
-    contactPhone: document.getElementById('contactPhone').value.trim(),
-    contactEmail: document.getElementById('contactEmail').value.trim(),
-    contactWeb:   document.getElementById('contactWeb').value.trim(),
-    contactAddr:  document.getElementById('contactAddr').value.trim(),
   };
 
+  // Load contact from global config or use defaults
+  try {
+    const cfg = await loadGlobalConfig();
+    if (cfg && cfg.contact) {
+      data.contactPhone = cfg.contact.phone || '';
+      data.contactEmail = cfg.contact.email || '';
+      data.contactWeb   = cfg.contact.web   || '';
+      data.contactAddr  = cfg.contact.addr  || '';
+    }
+  } catch(e) {}
+
   localStorage.setItem('nm_invoice_data', JSON.stringify(data));
+
+  // Save to Supabase
+  showToast('✓ Saving invoice…');
+  try {
+    const result = await saveInvoiceToSupabase(data);
+    if (!result.success) console.warn('Supabase save failed:', result.error);
+  } catch(e) { console.warn('Supabase error:', e); }
+
   showToast('✓ Saved! Opening invoice…');
   setTimeout(() => window.open('invoice.html', '_blank'), 700);
 }
@@ -805,15 +978,12 @@ function resetForm() {
   rows = [];
   renderRows();
   calcTotals();
-  ['clientName','clientPhone','clientAddress','termsText',
-   'contactPhone','contactEmail','contactWeb','contactAddr',
-   'bankAccount','bankVirtual'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  // Close bank card
+  ['clientName','clientPhone','clientAddress','termsText','bankAccount','bankVirtual']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('bankCardBody').classList.remove('open');
   document.getElementById('bankToggleBtn').textContent = '+ Add Bank Details';
+  document.getElementById('termsCardBody').classList.remove('open');
+  document.getElementById('termsToggleBtn').textContent = '+ Add';
   showToast('Form cleared.');
 }
 
@@ -827,7 +997,10 @@ function showToast(msg) {
 /* ─────────────────────────────────────────
    INIT
 ───────────────────────────────────────── */
-initMeta();
+(async () => {
+  await loadConfig();
+  initMeta();
+})();
 </script>
 </body>
 </html>
