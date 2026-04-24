@@ -417,6 +417,79 @@
   }
 
 
+  /* ── FEATURE: PRICE MODE TOGGLE ── */
+  .price-mode-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f5ea;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 4px;
+  }
+  .price-mode-wrap .pm-btn {
+    background: none;
+    border: none;
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #668;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .price-mode-wrap .pm-btn.active {
+    background: var(--green-grad);
+    color: #fff;
+  }
+
+  /* ── FEATURE: OPTIONAL TOGGLE ROWS (tax / discount) ── */
+  .opt-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .opt-toggle-row label.chk-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--label);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+  }
+  /* native checkbox styled */
+  .opt-toggle-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--green-dark);
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    flex-shrink: 0;
+  }
+  .opt-field-wrap {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s;
+    margin-top: 0;
+  }
+  .opt-field-wrap.open {
+    max-height: 80px;
+    opacity: 1;
+    margin-top: 6px;
+  }
+
   @media (max-width: 600px) {
 
   /* table hide header */
@@ -554,6 +627,11 @@
     <div class="products-header">
       <div class="section-title" style="margin-bottom:0">Products</div>
       <div class="products-header-right">
+        <!-- FEATURE 1: Price Mode Toggle -->
+        <div class="price-mode-wrap">
+          <button class="pm-btn active" id="pmSaved" onclick="setPriceMode('saved')">Use Saved Prices</button>
+          <button class="pm-btn" id="pmManual" onclick="setPriceMode('manual')">Manual Prices</button>
+        </div>
         <span class="product-counter" id="productCounter">0 / 8</span>
         <button class="btn-add" id="btnAddProduct" onclick="addRow()">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
@@ -587,15 +665,37 @@
     <div class="section-title">Summary</div>
     <div class="grid-2">
       <div>
-        <div class="field" style="margin-bottom:16px">
-          <label>Tax / VAT Rate (%)</label>
-          <div class="tax-field">
+
+        <!-- FEATURE 2: Optional Tax -->
+        <div class="opt-toggle-row">
+          <label class="chk-label" for="taxEnabled">
+            <input type="checkbox" id="taxEnabled" onchange="onTaxToggle()">
+            Apply Tax / VAT
+          </label>
+        </div>
+        <div class="opt-field-wrap" id="taxFieldWrap">
+          <div class="tax-field" style="margin-bottom:16px">
             <input type="number" id="taxRate" value="10" min="0" max="100" step="0.5" oninput="calcTotals()">
             <span style="color:#668; font-size:13px">%</span>
           </div>
         </div>
-        <!-- Terms & Conditions — optional collapsible -->
-        <div class="card-collapsible" style="box-shadow:none;border:none;padding:0;margin:0">
+
+        <!-- FEATURE 3: Optional Discount -->
+        <div class="opt-toggle-row" style="margin-top:6px">
+          <label class="chk-label" for="discountEnabled">
+            <input type="checkbox" id="discountEnabled" onchange="onDiscountToggle()">
+            Apply Discount
+          </label>
+        </div>
+        <div class="opt-field-wrap" id="discountFieldWrap">
+          <div class="tax-field" style="margin-bottom:16px">
+            <input type="number" id="discountRate" value="0" min="0" max="100" step="0.5" oninput="calcTotals()">
+            <span style="color:#668; font-size:13px">%</span>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions — optional collapsible (unchanged) -->
+        <div class="card-collapsible" style="box-shadow:none;border:none;padding:0;margin:0;margin-top:10px">
           <div class="card-header" onclick="toggleTerms()" style="padding:0">
             <label style="cursor:pointer">Terms &amp; Conditions <span class="optional-badge">Optional</span></label>
             <button class="toggle-btn" id="termsToggleBtn" type="button">+ Add</button>
@@ -611,7 +711,13 @@
             <span class="t-label">Sub Total</span>
             <span class="t-val" id="dispSubtotal">Rs. 0.00</span>
           </div>
-          <div class="totals-row">
+          <!-- FEATURE 3: Discount row — hidden when discount not applied -->
+          <div class="totals-row" id="discountRow" style="display:none">
+            <span class="t-label">Discount (<span id="dispDiscountPct">0</span>%)</span>
+            <span class="t-val" style="color:#c0392b" id="dispDiscount">− Rs. 0.00</span>
+          </div>
+          <!-- FEATURE 2: Tax row — hidden when tax not applied -->
+          <div class="totals-row" id="taxRow" style="display:none">
             <span class="t-label">Tax (<span id="dispTaxPct">10</span>%)</span>
             <span class="t-val" id="dispTax">Rs. 0.00</span>
           </div>
@@ -696,6 +802,28 @@ let SIZES = [...DEFAULT_SIZES];
 
 let rows = [];
 let rowCounter = 0;
+
+/* ─────────────────────────────────────────
+   FEATURE 1: PRICE MODE
+───────────────────────────────────────── */
+let priceMode = localStorage.getItem('nm_price_mode') || 'saved'; // 'saved' | 'manual'
+
+function setPriceMode(mode) {
+  priceMode = mode;
+  localStorage.setItem('nm_price_mode', mode);
+  // Update toggle button active states
+  document.getElementById('pmSaved').classList.toggle('active', mode === 'saved');
+  document.getElementById('pmManual').classList.toggle('active', mode === 'manual');
+  // Re-render rows so price inputs switch between readonly and editable
+  renderRows();
+  calcTotals();
+}
+
+function initPriceMode() {
+  // Restore saved mode on page load
+  document.getElementById('pmSaved').classList.toggle('active', priceMode === 'saved');
+  document.getElementById('pmManual').classList.toggle('active', priceMode === 'manual');
+}
 
 /* ─────────────────────────────────────────
    LOAD GLOBAL CONFIG FROM SUPABASE
@@ -797,9 +925,12 @@ function onProductChange(id, sel) {
   const row = rows.find(r => r.id === id);
   row.product = sel.value;
   const basePrice = sel.value ? PRODUCTS[sel.value].price : 0;
-  row.price = basePrice ? getPriceForSize(basePrice, row.size) : 0;
-  const tr = document.getElementById(`row-${id}`);
-  tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
+  // FEATURE 1: Only auto-fill price in 'saved' mode
+  if (priceMode === 'saved') {
+    row.price = basePrice ? getPriceForSize(basePrice, row.size) : 0;
+    const tr = document.getElementById(`row-${id}`);
+    tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
+  }
   calcRowTotal(id);
   calcTotals();
 }
@@ -807,11 +938,12 @@ function onProductChange(id, sel) {
 function onSizeChange(id, sel) {
   const row = rows.find(r => r.id === id);
   row.size = sel.value;
-  if (row.product && PRODUCTS[row.product]) {
+  // FEATURE 1: Only auto-update price in 'saved' mode
+  if (priceMode === 'saved' && row.product && PRODUCTS[row.product]) {
     row.price = getPriceForSize(PRODUCTS[row.product].price, row.size);
+    const tr = document.getElementById(`row-${id}`);
+    tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
   }
-  const tr = document.getElementById(`row-${id}`);
-  tr.querySelector('.price-input').value = row.price ? 'Rs. ' + row.price.toLocaleString() : '';
   calcRowTotal(id);
   calcTotals();
 }
@@ -845,20 +977,28 @@ function renderRows() {
 
   const opts = buildProductOptions();
   const sizeOpts = buildSizeOptions();
+  const isManual = priceMode === 'manual'; // FEATURE 1
+
   rows.forEach(row => {
     const tr = document.createElement('tr');
     tr.id = `row-${row.id}`;
     tr.setAttribute('data-row', row.id);
+
+    // FEATURE 1: price input is editable in manual mode, readonly in saved mode
+    const priceInputHTML = isManual
+      ? `<input type="number" class="price-input" value="${row.price || ''}" min="0" step="1" placeholder="Enter price" oninput="onManualPriceChange(${row.id}, this)">`
+      : `<input type="text" class="price-input" value="${row.price ? 'Rs. '+row.price.toLocaleString() : ''}" readonly>`;
+
     tr.innerHTML = `
-      <td>
+      <td data-label="Product">
         <select onchange="onProductChange(${row.id}, this)">${opts}</select>
       </td>
-      <td>
+      <td data-label="Size">
         <select onchange="onSizeChange(${row.id}, this)">${sizeOpts}</select>
       </td>
-      <td><input type="number" value="${row.qty}" min="1" style="width:60px;text-align:center" onchange="onQtyChange(${row.id},this)" oninput="onQtyChange(${row.id},this)"></td>
-      <td><input type="text" class="price-input" value="${row.price ? 'Rs. '+row.price.toLocaleString() : ''}" readonly></td>
-      <td class="td-total" id="total-${row.id}">Rs. 0.00</td>
+      <td data-label="Qty"><input type="number" value="${row.qty}" min="1" style="width:60px;text-align:center" onchange="onQtyChange(${row.id},this)" oninput="onQtyChange(${row.id},this)"></td>
+      <td data-label="Unit Price">${priceInputHTML}</td>
+      <td class="td-total" id="total-${row.id}" data-label="Total">Rs. 0.00</td>
       <td class="td-del"><button class="btn-del" onclick="deleteRow(${row.id})">✕</button></td>
     `;
     tbody.appendChild(tr);
@@ -872,17 +1012,74 @@ function renderRows() {
   updateProductCounter();
 }
 
+/* FEATURE 1: Handle manual price entry */
+function onManualPriceChange(id, inp) {
+  const row = rows.find(r => r.id === id);
+  const val = parseFloat(inp.value);
+  row.price = isNaN(val) ? 0 : Math.max(0, val);
+  calcRowTotal(id);
+  calcTotals();
+}
+
 function calcTotals() {
-  const tax = parseFloat(document.getElementById('taxRate').value) || 0;
-  document.getElementById('dispTaxPct').textContent = tax;
   let sub = 0;
   rows.forEach(r => sub += r.price * r.qty);
-  const taxAmt = sub * tax / 100;
-  const total  = sub + taxAmt;
+
   const fmt = v => 'Rs. ' + v.toLocaleString('en-PK', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  // FEATURE 3: Discount
+  const discountEnabled = document.getElementById('discountEnabled').checked;
+  const discountRate    = discountEnabled ? (parseFloat(document.getElementById('discountRate').value) || 0) : 0;
+  const discountAmt     = sub * discountRate / 100;
+  const afterDiscount   = sub - discountAmt;
+
+  // FEATURE 2: Tax
+  const taxEnabled = document.getElementById('taxEnabled').checked;
+  const taxRate    = taxEnabled ? (parseFloat(document.getElementById('taxRate').value) || 0) : 0;
+  document.getElementById('dispTaxPct').textContent = taxRate;
+  const taxAmt  = afterDiscount * taxRate / 100;
+  const total   = afterDiscount + taxAmt;
+
+  // Update display
   document.getElementById('dispSubtotal').textContent = fmt(sub);
-  document.getElementById('dispTax').textContent      = fmt(taxAmt);
-  document.getElementById('dispTotal').textContent    = fmt(total);
+
+  // FEATURE 3: Show/hide discount row
+  document.getElementById('dispDiscountPct').textContent = discountRate;
+  document.getElementById('dispDiscount').textContent    = '− ' + fmt(discountAmt);
+  document.getElementById('discountRow').style.display   = discountEnabled ? '' : 'none';
+
+  // FEATURE 2: Show/hide tax row
+  document.getElementById('dispTax').textContent = fmt(taxAmt);
+  document.getElementById('taxRow').style.display = taxEnabled ? '' : 'none';
+
+  document.getElementById('dispTotal').textContent = fmt(total);
+}
+
+/* FEATURE 2: Tax toggle handler */
+function onTaxToggle() {
+  const enabled = document.getElementById('taxEnabled').checked;
+  document.getElementById('taxFieldWrap').classList.toggle('open', enabled);
+  localStorage.setItem('nm_tax_enabled', enabled ? '1' : '0');
+  calcTotals();
+}
+
+/* FEATURE 3: Discount toggle handler */
+function onDiscountToggle() {
+  const enabled = document.getElementById('discountEnabled').checked;
+  document.getElementById('discountFieldWrap').classList.toggle('open', enabled);
+  localStorage.setItem('nm_discount_enabled', enabled ? '1' : '0');
+  calcTotals();
+}
+
+/* FEATURE 2+3: Restore toggle states from localStorage */
+function initOptionalToggles() {
+  const taxEnabled      = localStorage.getItem('nm_tax_enabled') !== '0'; // default ON
+  const discountEnabled = localStorage.getItem('nm_discount_enabled') === '1'; // default OFF
+
+  document.getElementById('taxEnabled').checked = taxEnabled;
+  document.getElementById('discountEnabled').checked = discountEnabled;
+  document.getElementById('taxFieldWrap').classList.toggle('open', taxEnabled);
+  document.getElementById('discountFieldWrap').classList.toggle('open', discountEnabled);
 }
 
 /* ─────────────────────────────────────────
@@ -926,11 +1123,18 @@ async function saveAndPreview() {
   if (rows.length === 0) { showToast('⚠ Add at least one product.');          return; }
   if (rows.some(r => !r.product)) { showToast('⚠ All rows must have a product selected.'); return; }
 
-  const tax = parseFloat(document.getElementById('taxRate').value) || 0;
+  // FEATURE 1+2+3: Correct calculation order — Subtotal → Discount → Tax → Total
+  const taxEnabled      = document.getElementById('taxEnabled').checked;
+  const discountEnabled = document.getElementById('discountEnabled').checked;
+  const taxRate         = taxEnabled      ? (parseFloat(document.getElementById('taxRate').value)      || 0) : 0;
+  const discountRate    = discountEnabled ? (parseFloat(document.getElementById('discountRate').value) || 0) : 0;
+
   let subtotal = 0;
   rows.forEach(r => subtotal += r.price * r.qty);
-  const taxAmt     = subtotal * tax / 100;
-  const grandTotal = subtotal + taxAmt;
+  const discountAmt = subtotal * discountRate / 100;
+  const afterDiscount = subtotal - discountAmt;
+  const taxAmt        = afterDiscount * taxRate / 100;
+  const grandTotal    = afterDiscount + taxAmt;
 
   const paymentStatus = document.getElementById('paymentStatus').value;
 
@@ -944,8 +1148,9 @@ async function saveAndPreview() {
       product: r.product, size: r.size, qty: r.qty, price: r.price,
       total: r.price * r.qty
     })),
-    taxRate: tax,
-    subtotal, taxAmt, grandTotal,
+    taxRate, taxEnabled,          // FEATURE 2
+    discountRate, discountEnabled, // FEATURE 3
+    subtotal, discountAmt, taxAmt, grandTotal,
     bankAccount:  document.getElementById('bankAccount').value.trim(),
     bankVirtual:  document.getElementById('bankVirtual').value.trim(),
     termsText:    document.getElementById('termsText').value.trim(),
@@ -1002,6 +1207,9 @@ function showToast(msg) {
 (async () => {
   await loadConfig();
   initMeta();
+  initPriceMode();          // FEATURE 1
+  initOptionalToggles();    // FEATURE 2 + 3
+  calcTotals();
 })();
 </script>
 </body>

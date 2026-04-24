@@ -719,11 +719,19 @@
 
       let totals = '';
       if (isLast) {
+        // FEATURE 2+3: Conditionally render discount and tax rows
+        const discountRow = (data.discountEnabled && data.discountRate > 0)
+          ? `<div class="tr"><span class="tl">Discount (${data.discountRate}%) :</span><span class="tv" style="color:#c0392b">− ${fmtMoney(data.discountAmt)}</span></div>`
+          : '';
+        const taxRow = (data.taxEnabled && data.taxRate > 0)
+          ? `<div class="tr"><span class="tl">Tax Vat (${data.taxRate}%) :</span><span class="tv">${fmtMoney(data.taxAmt)}</span></div>`
+          : '';
         totals = `
           <div class="inv-totals-row">
             <div class="inv-totals-table">
               <div class="tr"><span class="tl">Sub Total :</span><span class="tv">${fmtMoney(data.subtotal)}</span></div>
-              <div class="tr"><span class="tl">Tax Vat (${data.taxRate}%) :</span><span class="tv">${fmtMoney(data.taxAmt)}</span></div>
+              ${discountRow}
+              ${taxRow}
               <div class="tr grand"><span class="tl">Total :</span><span class="tv">${fmtMoney(data.grandTotal)}</span></div>
             </div>
           </div>`;
