@@ -19,10 +19,12 @@
     --text: #1a2e1a;
     --label: #3d5c2a;
     --shadow: 0 4px 24px rgba(28,102,49,0.10);
+    --shadow-sm: 0 2px 8px rgba(28,102,49,0.08);
   }
 
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
 
+  /* ── HEADER ── */
   header {
     background: var(--green-grad);
     padding: 0 40px;
@@ -34,7 +36,8 @@
     flex-wrap: wrap;
     gap: 8px;
   }
-  header .brand .name { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; }
+  header .brand { display: flex; flex-direction: column; }
+  header .brand .name { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; line-height: 1; }
   header .brand .tagline { font-size: 11px; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
   .btn-header {
     background: rgba(255,255,255,0.18);
@@ -66,64 +69,122 @@
   }
   .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  /* ── STATS BAR ── */
+  .stats-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 24px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid rgba(102,134,33,0.1);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .stat-icon.green  { background: #e8f5e9; color: #1c6631; }
+  .stat-icon.blue   { background: #e3f2fd; color: #1565c0; }
+  .stat-icon.amber  { background: #fff8e1; color: #c07800; }
+  .stat-icon.red    { background: #fdecea; color: #c0392b; }
+  .stat-info { display: flex; flex-direction: column; }
+  .stat-val  { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .stat-lbl  { font-size: 11px; font-weight: 600; color: #778; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-  /* SEARCH BAR */
+  /* ── PAGE ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 20px 24px 80px; }
+
+  /* ── SEARCH BAR ── */
   .search-bar {
     background: #fff;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    padding: 20px 28px;
-    margin-bottom: 24px;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    padding: 16px 20px;
+    margin-bottom: 18px;
     border: 1px solid rgba(102,134,33,0.1);
     display: flex;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
     flex-wrap: wrap;
   }
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-wrap svg { position: absolute; left: 12px; color: #aab; pointer-events: none; }
   .search-bar input {
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     border: 1.5px solid var(--border);
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 10px 14px 10px 38px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
-    flex: 1;
-    min-width: 200px;
+    width: 100%;
+    color: var(--text);
   }
   .search-bar input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,122,58,0.12); }
   .search-bar select {
     font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     border: 1.5px solid var(--border);
     border-radius: 8px;
     padding: 10px 36px 10px 14px;
     outline: none;
     appearance: none;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231c6631' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231c6631' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
     cursor: pointer;
+    color: var(--text);
   }
   .btn-search {
     background: var(--green-grad);
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 24px;
+    padding: 10px 20px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s;
     white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 6px;
   }
   .btn-search:hover { opacity: 0.88; }
-  .results-count { font-size: 13px; color: #778; margin-left: auto; white-space: nowrap; }
+  .btn-clear {
+    background: #f0f5ea;
+    color: var(--green-dark);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-clear:hover { background: #e0edd0; }
+  .results-count { font-size: 12px; color: #778; margin-left: auto; white-space: nowrap; font-weight: 500; }
 
-  /* TABLE */
+  /* ── TABLE CARD ── */
   .card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 14px;
     box-shadow: var(--shadow);
     border: 1px solid rgba(102,134,33,0.1);
     overflow: hidden;
@@ -132,11 +193,11 @@
   .data-table { width: 100%; border-collapse: collapse; }
   .data-table thead tr { background: var(--green-grad); }
   .data-table thead th {
-    padding: 14px 16px;
+    padding: 13px 16px;
     text-align: left;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
     white-space: nowrap;
@@ -146,52 +207,132 @@
     cursor: pointer;
     transition: background 0.15s;
   }
-  .data-table tbody tr.main-row:hover { background: #f2f9ee; }
+  .data-table tbody tr.main-row:hover { background: #f5fbf0; }
   .data-table tbody tr.main-row.expanded { background: #eef7e6; }
   .data-table tbody td {
-    padding: 14px 16px;
-    font-size: 14px;
+    padding: 13px 16px;
+    font-size: 13px;
     vertical-align: middle;
   }
-  .expand-icon { font-size: 12px; color: #668; transition: transform 0.2s; display: inline-block; }
-  .expanded .expand-icon { transform: rotate(90deg); }
+
+  /* Expand chevron */
+  .expand-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: #f0f5ea;
+    color: var(--green-dark);
+    transition: transform 0.22s, background 0.2s;
+    flex-shrink: 0;
+  }
+  .expanded .expand-chevron { transform: rotate(90deg); background: var(--green-dark); color: #fff; }
 
   /* EXPAND ROW */
   .detail-row td {
     padding: 0 !important;
-    background: #f8fcf4 !important;
+    background: #f7fbf2 !important;
     border-bottom: 2px solid var(--border) !important;
   }
   .detail-inner {
-    padding: 24px 32px;
+    padding: 24px 28px;
     display: none;
-    animation: slideDown 0.2s ease;
+    animation: slideDown 0.22s ease;
   }
   .detail-inner.open { display: block; }
   @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
+    from { opacity: 0; transform: translateY(-6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
-  .detail-item { display: flex; flex-direction: column; gap: 2px; }
-  .detail-item .dl { font-size: 11px; font-weight: 600; color: #778; letter-spacing: 0.5px; text-transform: uppercase; }
-  .detail-item .dv { font-size: 14px; font-weight: 600; color: var(--text); }
+  .detail-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
 
-  .products-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green-light); margin-bottom: 10px; }
-  .products-mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .products-mini-table thead tr { background: #eaf2df; }
-  .products-mini-table thead th { padding: 8px 12px; text-align: left; font-weight: 600; color: var(--green-dark); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .products-mini-table tbody tr { border-bottom: 1px solid #e0edd0; }
-  .products-mini-table tbody td { padding: 8px 12px; }
-  .products-mini-table tbody tr:last-child { border-bottom: none; }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    flex: 1;
+  }
+  .detail-item { display: flex; flex-direction: column; gap: 3px; }
+  .detail-item .dl { font-size: 10px; font-weight: 600; color: #889; letter-spacing: 0.8px; text-transform: uppercase; }
+  .detail-item .dv { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  /* ACTION BUTTONS in detail */
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .btn-action {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.18s, transform 0.15s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .btn-action:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
+  .btn-action:active { transform: translateY(0); }
+
+  .btn-view    { background: #e8f5e9; color: #1c6631; }
+  .btn-edit    { background: #e3f2fd; color: #1565c0; }
+  .btn-reprint { background: var(--green-grad); color: #fff; }
+  .btn-pdf     { background: #3d3d3d; color: #fff; }
+  .btn-dup     { background: #fff8e1; color: #c07800; }
+  .btn-del     { background: #fdecea; color: #c0392b; }
+
+  /* TABLE ACTIONS (inline per row) */
+  .row-actions {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .btn-icon {
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.12s;
+    flex-shrink: 0;
+    background: transparent;
+  }
+  .btn-icon:hover { transform: translateY(-1px); }
+  .btn-icon.view    { color: #1c6631; border-color: #c8ddb0; }
+  .btn-icon.view:hover { background: #e8f5e9; }
+  .btn-icon.edit    { color: #1565c0; border-color: #bbdefb; }
+  .btn-icon.edit:hover { background: #e3f2fd; }
+  .btn-icon.reprint { color: #fff; background: var(--green-grad); border-color: transparent; }
+  .btn-icon.reprint:hover { opacity: 0.85; }
+  .btn-icon.pdf     { color: #3d3d3d; border-color: #ccc; }
+  .btn-icon.pdf:hover { background: #f5f5f5; }
+  .btn-icon.dup     { color: #c07800; border-color: #ffe082; }
+  .btn-icon.dup:hover { background: #fff8e1; }
+  .btn-icon.del     { color: #c0392b; border-color: #f5c6c0; }
+  .btn-icon.del:hover { background: #fdecea; }
 
   /* STATUS BADGES */
   .badge {
     display: inline-block;
-    padding: 3px 12px;
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -199,152 +340,355 @@
   .badge-Paid    { background: #e8f5e9; color: #1c6631; border: 1px solid #a5d6a7; }
   .badge-Unpaid  { background: #fdecea; color: #c0392b; border: 1px solid #f5c6c0; }
   .badge-Partial { background: #fff8e1; color: #c07800; border: 1px solid #ffe082; }
+  .badge-Pending { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
 
-  /* EMPTY / ERROR STATES */
-  .state-box {
-    padding: 60px 32px;
-    text-align: center;
-    color: #778;
+  /* Status selector in detail */
+  .status-editor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
   }
-  .state-box h3 { font-size: 20px; margin-bottom: 8px; color: #445; }
-  .state-box p  { font-size: 14px; }
+  .status-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 5px 28px 5px 10px;
+    appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231c6631' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+    cursor: pointer;
+    outline: none;
+    color: var(--text);
+  }
+  .btn-update-status {
+    background: var(--green-grad);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 5px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.18s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn-update-status:hover { opacity: 0.88; }
+
+  /* Products mini table */
+  .products-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green-light); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .products-mini-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .products-mini-table thead tr { background: #eaf2df; }
+  .products-mini-table thead th { padding: 8px 12px; text-align: left; font-weight: 600; color: var(--green-dark); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .products-mini-table tbody tr { border-bottom: 1px solid #e0edd0; }
+  .products-mini-table tbody td { padding: 8px 12px; }
+  .products-mini-table tbody tr:last-child { border-bottom: none; }
+
+  /* EMPTY / ERROR / LOADING */
+  .state-box { padding: 60px 32px; text-align: center; color: #778; }
+  .state-box .state-icon { margin-bottom: 14px; color: #c8ddb0; }
+  .state-box h3 { font-size: 18px; margin-bottom: 6px; color: #445; }
+  .state-box p  { font-size: 13px; }
 
   .loading-spinner {
     display: inline-block;
-    width: 22px; height: 22px;
-    border: 3px solid rgba(28,102,49,0.2);
+    width: 20px; height: 20px;
+    border: 2.5px solid rgba(28,102,49,0.18);
     border-top-color: var(--green-dark);
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
-    margin-right: 10px;
+    margin-right: 8px;
     vertical-align: middle;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  @media (max-width: 700px) {
-    header { height: auto; padding: 12px 16px; }
-    .page { padding: 20px 12px 60px; }
-    .search-bar { padding: 14px 16px; }
-    .data-table thead th:nth-child(3),
-    .data-table tbody td:nth-child(3) { display: none; }
-  }
-
-  @media (max-width: 600px) {
-
-  /* hide table header */
-  .products-mini-table thead {
+  /* ── MODAL (Edit Invoice) ── */
+  .modal-overlay {
     display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
-
-  /* each row = card */
-  .products-mini-table tbody tr {
-    display: block;
-    background: #f8faf4;
-    border: 1px solid #c8ddb0;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-
-  /* each cell */
-  .products-mini-table tbody td {
-    display: block;
-    padding: 5px 0;
-    font-size: 13px;
-    text-align: left !important;
-  }
-
-  /* label before value */
-  .products-mini-table tbody td::before {
-    content: attr(data-label);
-    display: block;
-    font-size: 10px;
-    color: #778;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  /* total highlight */
-  .products-mini-table tbody td:last-child {
-    font-weight: 700;
-    font-size: 14px;
-    margin-top: 5px;
-  }
-
-}
-
-/* ============================= */
-/* MOBILE RESPONSIVE TABLE FIX  */
-/* ============================= */
-
-@media (max-width: 768px) {
-
-  /* hide header */
-  .data-table thead {
-    display: none;
-  }
-
-  /* each row = card */
-  .data-table tbody tr.main-row {
-    display: block;
+  .modal-overlay.open { display: flex; }
+  .modal {
     background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-  }
-
-  .data-table tbody tr.main-row td {
-    display: block;
-    padding: 6px 0;
-    font-size: 13px;
-  }
-
-  /* label system */
-  .data-table tbody tr.main-row td::before {
-    content: attr(data-label);
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    color: #778;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-
-  /* expand icon fix */
-  .expand-icon {
-    display: inline-block;
-    margin-bottom: 6px;
-  }
-
-  /* detail row full width */
-  .detail-row td {
-    padding: 0 !important;
-  }
-
-  .detail-inner {
-    padding: 16px;
-  }
-
-  /* search bar stacking */
-  .search-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-bar input,
-  .search-bar select,
-  .btn-search {
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.25s ease;
   }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-header {
+    background: var(--green-grad);
+    padding: 20px 28px;
+    border-radius: 18px 18px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title { color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.35); }
+  .modal-body { padding: 24px 28px; }
 
-  .results-count {
-    text-align: center;
-    margin-left: 0;
+  /* Edit form inside modal */
+  .edit-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin: 0 0 14px;
+    padding-left: 10px;
+    border-left: 3px solid var(--green-light);
   }
-}
+  .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .edit-field { display: flex; flex-direction: column; gap: 5px; }
+  .edit-field label { font-size: 11px; font-weight: 600; color: var(--label); text-transform: uppercase; letter-spacing: 0.5px; }
+  .edit-field input, .edit-field select, .edit-field textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .edit-field input:focus, .edit-field select:focus, .edit-field textarea:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(45,122,58,0.1);
+  }
+  .edit-field textarea { resize: vertical; min-height: 60px; }
+  .edit-full { grid-column: 1 / -1; }
+
+  /* Edit products mini table */
+  .edit-items-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  .edit-items-table thead tr { background: #f0f5ea; }
+  .edit-items-table thead th { padding: 8px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--green-dark); text-align: left; }
+  .edit-items-table tbody tr { border-bottom: 1px solid #eef3e8; }
+  .edit-items-table tbody td { padding: 6px 6px; vertical-align: middle; }
+  .edit-items-table input, .edit-items-table select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    width: 100%;
+    outline: none;
+    color: var(--text);
+  }
+  .edit-items-table input:focus, .edit-items-table select:focus {
+    border-color: var(--green-mid);
+  }
+  .btn-del-item {
+    background: none;
+    border: 1.5px solid #f5c6c0;
+    color: #c0392b;
+    border-radius: 6px;
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-del-item:hover { background: #fdecea; }
+  .btn-add-item {
+    background: #f0f5ea;
+    border: 1.5px solid var(--border);
+    color: var(--green-dark);
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background 0.2s;
+  }
+  .btn-add-item:hover { background: #e0edd0; }
+
+  .edit-totals-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px dashed #dde;
+  }
+  .edit-totals-row:last-child { border-bottom: none; font-weight: 700; font-size: 15px; color: var(--green-dark); }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 28px 24px;
+    flex-wrap: wrap;
+  }
+  .btn-modal-cancel {
+    background: #fff;
+    color: var(--green-dark);
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-modal-cancel:hover { background: #f0f5ea; }
+  .btn-modal-save {
+    background: var(--green-grad);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 10px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(28,102,49,0.25);
+    transition: opacity 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .btn-modal-save:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--green-dark);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.28s, transform 0.28s;
+    pointer-events: none;
+    z-index: 2000;
+    max-width: calc(100vw - 56px);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { background: #c0392b; }
+  .toast.info  { background: #1565c0; }
+
+  /* CONFIRM DIALOG */
+  .confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.2);
+    text-align: center;
+    animation: modalIn 0.2s ease;
+  }
+  .confirm-icon { margin-bottom: 14px; }
+  .confirm-box h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .confirm-box p { font-size: 13px; color: #667; line-height: 1.6; margin-bottom: 20px; }
+  .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+  .btn-confirm-no {
+    background: #f0f5ea; color: var(--green-dark);
+    border: 1.5px solid var(--border);
+    border-radius: 9px; padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-confirm-no:hover { background: #e0edd0; }
+  .btn-confirm-yes {
+    background: #c0392b; color: #fff;
+    border: none;
+    border-radius: 9px; padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .btn-confirm-yes:hover { opacity: 0.88; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    header { height: auto; padding: 12px 16px; }
+    .stats-bar { grid-template-columns: 1fr 1fr; padding: 16px 16px 0; gap: 10px; }
+    .stat-val { font-size: 18px; }
+    .page { padding: 14px 12px 60px; }
+    .search-bar { padding: 12px 14px; flex-direction: column; align-items: stretch; }
+    .search-bar input, .search-bar select, .btn-search, .btn-clear { width: 100%; }
+    .results-count { text-align: center; margin-left: 0; }
+
+    /* Mobile table = cards */
+    .data-table thead { display: none; }
+    .data-table tbody tr.main-row {
+      display: block;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .data-table tbody tr.main-row td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 13px;
+    }
+    .data-table tbody tr.main-row td::before {
+      content: attr(data-label);
+      font-size: 10px;
+      font-weight: 600;
+      color: #889;
+      text-transform: uppercase;
+    }
+    .td-actions::before { display: none; }
+    .detail-inner { padding: 14px; }
+    .detail-top { flex-direction: column; }
+    .action-buttons { width: 100%; }
+    .edit-grid { grid-template-columns: 1fr; }
+    .modal { border-radius: 14px; }
+    .modal-header { border-radius: 14px 14px 0 0; }
+  }
+  @media (max-width: 440px) {
+    .stats-bar { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -352,25 +696,81 @@
 <header>
   <div class="brand">
     <div class="name">NutriMeth</div>
-    <div class="tagline">Invoice Data</div>
+    <div class="tagline">Invoice Management</div>
   </div>
   <div class="header-right">
-    <a class="btn-header" href="index.html">← Invoice Creator</a>
+    <a class="btn-header" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Invoice Creator
+    </a>
+    <a class="btn-header" href="editor.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Editor
+    </a>
     <span class="header-badge">View Data</span>
   </div>
 </header>
+
+<!-- STATS -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-card">
+    <div class="stat-icon green">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl">Total Invoices</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-val" id="statPaid">—</span>
+      <span class="stat-lbl">Paid</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon red">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-val" id="statUnpaid">—</span>
+      <span class="stat-lbl">Unpaid</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon blue">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-val" id="statRevenue">—</span>
+      <span class="stat-lbl">Total Revenue</span>
+    </div>
+  </div>
+</div>
 
 <div class="page">
 
   <!-- SEARCH -->
   <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search by client name or invoice number…" oninput="debouncedSearch()">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search by client name or invoice number…" oninput="debouncedSearch()">
+    </div>
     <select id="searchType">
       <option value="client">By Client Name</option>
       <option value="invoice">By Invoice #</option>
     </select>
-    <button class="btn-search" onclick="doSearch()">Search</button>
-    <button class="btn-search" style="background:#f0f5ea;color:var(--green-dark);border:1.5px solid var(--border)" onclick="clearSearch()">Clear</button>
+    <button class="btn-search" onclick="doSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+    <button class="btn-clear" onclick="clearSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Clear
+    </button>
     <span class="results-count" id="resultsCount"></span>
   </div>
 
@@ -379,17 +779,18 @@
     <table class="data-table">
       <thead>
         <tr>
-          <th style="width:30px"></th>
+          <th style="width:36px"></th>
           <th>Invoice #</th>
           <th>Client Name</th>
-          <th>Invoice Date</th>
-          <th>Total</th>
+          <th>Date</th>
+          <th>Amount</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="tableBody">
         <tr>
-          <td colspan="6">
+          <td colspan="7">
             <div class="state-box">
               <span class="loading-spinner"></span> Loading invoices…
             </div>
@@ -401,129 +802,740 @@
 
 </div>
 
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit Invoice
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="edit-section-title">Client Information</div>
+      <div class="edit-grid">
+        <div class="edit-field">
+          <label>Client Name</label>
+          <input type="text" id="editClientName" placeholder="Client name">
+        </div>
+        <div class="edit-field">
+          <label>Phone</label>
+          <input type="text" id="editClientPhone" placeholder="Phone number">
+        </div>
+        <div class="edit-field edit-full">
+          <label>Address</label>
+          <textarea id="editClientAddress" placeholder="Client address"></textarea>
+        </div>
+      </div>
+
+      <div class="edit-section-title">Invoice Details</div>
+      <div class="edit-grid">
+        <div class="edit-field">
+          <label>Invoice Number</label>
+          <input type="text" id="editInvoiceNumber" placeholder="INV-000001">
+        </div>
+        <div class="edit-field">
+          <label>Invoice Date</label>
+          <input type="text" id="editInvoiceDate" placeholder="Invoice date">
+        </div>
+        <div class="edit-field">
+          <label>Due Date</label>
+          <input type="date" id="editDueDate">
+        </div>
+        <div class="edit-field">
+          <label>Payment Status</label>
+          <select id="editPaymentStatus">
+            <option value="Unpaid">Unpaid</option>
+            <option value="Paid">Paid</option>
+            <option value="Partial">Partial</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="edit-section-title">Products</div>
+      <div style="overflow-x:auto; margin-bottom:10px">
+        <table class="edit-items-table" id="editItemsTable">
+          <thead>
+            <tr>
+              <th style="width:32%">Product</th>
+              <th style="width:14%">Size</th>
+              <th style="width:10%">Qty</th>
+              <th style="width:16%">Price</th>
+              <th style="width:16%">Total</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          <tbody id="editItemsBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-add-item" onclick="addEditItem()">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Add Row
+      </button>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:18px">
+        <div style="min-width:220px; background:#f7faf3; border-radius:10px; padding:14px 18px; border:1px solid var(--border);">
+          <div class="edit-totals-row"><span style="color:#667">Subtotal</span><span id="editSubtotal">Rs. 0.00</span></div>
+          <div class="edit-totals-row"><span style="color:#667">Grand Total</span><span id="editGrandTotal">Rs. 0.00</span></div>
+        </div>
+      </div>
+
+      <div class="edit-section-title" style="margin-top:20px">Optional</div>
+      <div class="edit-grid">
+        <div class="edit-field">
+          <label>Terms & Conditions</label>
+          <textarea id="editTerms" placeholder="Payment due within 10 days…"></textarea>
+        </div>
+        <div class="edit-field">
+          <label>Notes</label>
+          <textarea id="editNotes" placeholder="Additional notes…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-save" onclick="saveEdit()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+    </div>
+    <h3>Delete Invoice?</h3>
+    <p id="confirmMsg">This action cannot be undone. The invoice will be permanently removed.</p>
+    <div class="confirm-btns">
+      <button class="btn-confirm-no" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-yes" id="confirmYesBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script src="supabase.js"></script>
 <script>
-let allData = [];
+/* ──────────────────────────────────────────
+   GLOBALS
+────────────────────────────────────────── */
+const SUPABASE_URL_DV  = 'https://nzvnhyfwzsonqgqvhjlu.supabase.co';
+const SUPABASE_ANON_KEY_DV = 'sb_publishable_g8sFBJTr6NpoBJf-PasHOQ_S4tuYUQz';
+const sbHeaders = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_ANON_KEY_DV,
+  'Authorization': `Bearer ${SUPABASE_ANON_KEY_DV}`,
+};
+
+let allData     = [];
 let expandedRow = null;
 let debounceTimer = null;
+let editingRecord = null;    // current record being edited
+let editItems   = [];        // items array in modal
+let confirmCb   = null;      // pending confirm callback
 
+/* ──────────────────────────────────────────
+   HELPERS
+────────────────────────────────────────── */
 function fmtMoney(v) {
   return 'Rs. ' + Number(v || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
 }
-
 function fmtDate(str) {
   if (!str) return '—';
   const d = new Date(str);
   if (isNaN(d)) return str;
   return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
-
 function escHtml(str) {
   if (!str) return '—';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  // icon prefix
+  const icons = { '': '✓', error: '✕', info: 'ℹ' };
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
 
+/* ──────────────────────────────────────────
+   STATS
+────────────────────────────────────────── */
+function updateStats(data) {
+  document.getElementById('statTotal').textContent   = data.length;
+  document.getElementById('statPaid').textContent    = data.filter(d => d.payment_status === 'Paid').length;
+  document.getElementById('statUnpaid').textContent  = data.filter(d => d.payment_status === 'Unpaid').length;
+  const rev = data.reduce((s, d) => s + Number(d.total_price || 0), 0);
+  document.getElementById('statRevenue').textContent = 'Rs. ' + Math.round(rev).toLocaleString('en-PK');
+}
+
+/* ──────────────────────────────────────────
+   TABLE RENDER
+────────────────────────────────────────── */
 function renderTable(data) {
   const tbody = document.getElementById('tableBody');
   document.getElementById('resultsCount').textContent = `${data.length} record${data.length !== 1 ? 's' : ''}`;
+  updateStats(data);
 
   if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><h3>No Invoices Found</h3><p>No records match your search.</p></div></td></tr>`;
+    tbody.innerHTML = `
+      <tr><td colspan="7">
+        <div class="state-box">
+          <div class="state-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c8ddb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>No Invoices Found</h3>
+          <p>No records match your search. Try a different query.</p>
+        </div>
+      </td></tr>`;
     return;
   }
 
   tbody.innerHTML = data.map((inv, i) => {
-    const status = inv.payment_status || 'Unpaid';
+    const status   = inv.payment_status || 'Unpaid';
     const products = Array.isArray(inv.product_details) ? inv.product_details : [];
-
-    const productRows = products.map(p => `
+    const pRows    = products.map(p => `
       <tr>
-        <td>${escHtml(p.name)}</td>
-        <td>${escHtml(p.size || '—')}</td>
-        <td style="text-align:center">${p.qty || 1}</td>
-        <td style="text-align:right">${fmtMoney(p.price)}</td>
-        <td style="text-align:right;font-weight:700">${fmtMoney(p.total)}</td>
+        <td data-label="Item">${escHtml(p.name)}</td>
+        <td data-label="Size">${escHtml(p.size || '—')}</td>
+        <td style="text-align:center" data-label="Qty">${p.qty || 1}</td>
+        <td style="text-align:right"  data-label="Price">${fmtMoney(p.price)}</td>
+        <td style="text-align:right;font-weight:700" data-label="Total">${fmtMoney(p.total)}</td>
       </tr>`).join('');
 
     return `
-      <tr class="main-row" id="main-${i}" onclick="toggleRow(${i})">
-        <td><span class="expand-icon" id="icon-${i}">▶</span></td>
-        <td><strong>${escHtml(inv.invoice_number)}</strong></td>
-        <td>${escHtml(inv.client_name)}</td>
-        <td>${fmtDate(inv.invoice_date)}</td>
-        <td style="font-weight:700;color:var(--green-dark)">${fmtMoney(inv.total_price)}</td>
-        <td><span class="badge badge-${status}">${status}</span></td>
+      <tr class="main-row" id="main-${i}" onclick="toggleRow(${i}, event)">
+        <td data-label="">
+          <span class="expand-chevron" id="icon-${i}">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </td>
+        <td data-label="Invoice #"><strong>${escHtml(inv.invoice_number)}</strong></td>
+        <td data-label="Client">${escHtml(inv.client_name)}</td>
+        <td data-label="Date">${fmtDate(inv.invoice_date)}</td>
+        <td data-label="Amount" style="font-weight:700;color:var(--green-dark)">${fmtMoney(inv.total_price)}</td>
+        <td data-label="Status"><span class="badge badge-${status}">${status}</span></td>
+        <td class="td-actions" data-label="Actions" onclick="event.stopPropagation()">
+          <div class="row-actions">
+            <button class="btn-icon view"    title="View Details"  onclick="viewInvoice(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="btn-icon edit"    title="Edit Invoice"  onclick="editInvoice(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon reprint" title="Reprint Invoice" onclick="reprintInvoice(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            </button>
+            <button class="btn-icon pdf"     title="Download PDF"  onclick="downloadPDF(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </button>
+            <button class="btn-icon dup"     title="Duplicate"     onclick="duplicateInvoice(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            </button>
+            <button class="btn-icon del"     title="Delete"        onclick="deleteInvoice(${i})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            </button>
+          </div>
+        </td>
       </tr>
       <tr class="detail-row" id="detail-${i}">
-        <td colspan="6">
+        <td colspan="7">
           <div class="detail-inner" id="inner-${i}">
-            <div class="detail-grid">
-              <div class="detail-item"><span class="dl">Client Number</span><span class="dv">${escHtml(inv.client_number) || '—'}</span></div>
-              <div class="detail-item"><span class="dl">Client Address</span><span class="dv">${escHtml(inv.client_address) || '—'}</span></div>
-              <div class="detail-item"><span class="dl">Due Date</span><span class="dv">${fmtDate(inv.due_date)}</span></div>
-              <div class="detail-item"><span class="dl">Payment Status</span><span class="dv"><span class="badge badge-${status}">${status}</span></span></div>
-              <div class="detail-item"><span class="dl">Created At</span><span class="dv">${fmtDate(inv.created_at)}</span></div>
+            <div class="detail-top">
+              <div class="detail-grid">
+                <div class="detail-item"><span class="dl">Client Number</span><span class="dv">${escHtml(inv.client_number) || '—'}</span></div>
+                <div class="detail-item"><span class="dl">Client Address</span><span class="dv">${escHtml(inv.client_address) || '—'}</span></div>
+                <div class="detail-item"><span class="dl">Due Date</span><span class="dv">${fmtDate(inv.due_date)}</span></div>
+                <div class="detail-item"><span class="dl">Created At</span><span class="dv">${fmtDate(inv.created_at)}</span></div>
+                <div class="detail-item">
+                  <span class="dl">Update Status</span>
+                  <div class="status-editor">
+                    <select class="status-select" id="statusSel-${i}">
+                      <option value="Unpaid"  ${status==='Unpaid'  ?'selected':''}>Unpaid</option>
+                      <option value="Paid"    ${status==='Paid'    ?'selected':''}>Paid</option>
+                      <option value="Partial" ${status==='Partial' ?'selected':''}>Partial</option>
+                      <option value="Pending" ${status==='Pending' ?'selected':''}>Pending</option>
+                    </select>
+                    <button class="btn-update-status" onclick="updateStatus(${i})">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="action-buttons">
+                <button class="btn-action btn-view"    onclick="viewInvoice(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </button>
+                <button class="btn-action btn-edit"    onclick="editInvoice(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+                <button class="btn-action btn-reprint" onclick="reprintInvoice(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                  Reprint
+                </button>
+                <button class="btn-action btn-pdf"     onclick="downloadPDF(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Download PDF
+                </button>
+                <button class="btn-action btn-dup"     onclick="duplicateInvoice(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                  Duplicate
+                </button>
+                <button class="btn-action btn-del"     onclick="deleteInvoice(${i})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+                  Delete
+                </button>
+              </div>
             </div>
-            <div class="products-title">Product Details</div>
-            <table class="products-mini-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Size</th>
-                  <th>Qty</th>
-                  <th style="text-align:right">Unit Price</th>
-                  <th style="text-align:right">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${productRows || '<tr><td colspan="5" style="color:#aab;font-style:italic;padding:8px 12px">No product details</td></tr>'}
-              </tbody>
-            </table>
+            <div class="products-title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Product Details
+            </div>
+            <div style="overflow-x:auto">
+              <table class="products-mini-table">
+                <thead>
+                  <tr>
+                    <th>Item</th><th>Size</th>
+                    <th style="text-align:center">Qty</th>
+                    <th style="text-align:right">Unit Price</th>
+                    <th style="text-align:right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${pRows || '<tr><td colspan="5" style="color:#aab;font-style:italic;padding:10px 12px">No product details</td></tr>'}
+                </tbody>
+              </table>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:14px">
+              <div style="text-align:right;font-size:13px;color:var(--green-dark);font-weight:700">
+                Grand Total: ${fmtMoney(inv.total_price)}
+              </div>
+            </div>
           </div>
         </td>
       </tr>`;
   }).join('');
 }
 
-function toggleRow(i) {
-  const inner = document.getElementById(`inner-${i}`);
+/* ──────────────────────────────────────────
+   EXPAND / COLLAPSE
+────────────────────────────────────────── */
+function toggleRow(i, event) {
+  // Don't toggle when clicking action buttons (handled by stopPropagation there)
+  const inner   = document.getElementById(`inner-${i}`);
   const mainRow = document.getElementById(`main-${i}`);
-  const icon = document.getElementById(`icon-${i}`);
+  const icon    = document.getElementById(`icon-${i}`);
 
   if (expandedRow !== null && expandedRow !== i) {
-    // Close previously expanded
-    document.getElementById(`inner-${expandedRow}`).classList.remove('open');
-    document.getElementById(`main-${expandedRow}`).classList.remove('expanded');
-    document.getElementById(`icon-${expandedRow}`).style.transform = '';
+    document.getElementById(`inner-${expandedRow}`)?.classList.remove('open');
+    document.getElementById(`main-${expandedRow}`)?.classList.remove('expanded');
   }
 
   if (inner.classList.contains('open')) {
     inner.classList.remove('open');
     mainRow.classList.remove('expanded');
-    icon.style.transform = '';
     expandedRow = null;
   } else {
     inner.classList.add('open');
     mainRow.classList.add('expanded');
-    icon.style.transform = 'rotate(90deg)';
     expandedRow = i;
   }
 }
 
+/* ──────────────────────────────────────────
+   VIEW (quick inline expand)
+────────────────────────────────────────── */
+function viewInvoice(i) {
+  const inner   = document.getElementById(`inner-${i}`);
+  const mainRow = document.getElementById(`main-${i}`);
+  if (expandedRow === i && inner.classList.contains('open')) return; // already open
+  if (expandedRow !== null && expandedRow !== i) {
+    document.getElementById(`inner-${expandedRow}`)?.classList.remove('open');
+    document.getElementById(`main-${expandedRow}`)?.classList.remove('expanded');
+  }
+  inner.classList.add('open');
+  mainRow.classList.add('expanded');
+  expandedRow = i;
+  mainRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ──────────────────────────────────────────
+   REPRINT — Highest priority feature
+────────────────────────────────────────── */
+function reprintInvoice(i) {
+  const inv = allData[i];
+  if (!inv) return;
+
+  showToast('Preparing reprint…', 'info');
+
+  // Build nm_invoice_data compatible object from saved DB record
+  const products = Array.isArray(inv.product_details) ? inv.product_details : [];
+  const subtotal = products.reduce((s, p) => s + Number(p.total || 0), 0);
+
+  const reprintData = {
+    invoiceNumber:   inv.invoice_number || '',
+    invoiceDate:     inv.invoice_date   || '',
+    dueDate:         inv.due_date       || '',
+    clientName:      inv.client_name    || '',
+    clientPhone:     inv.client_number  || '',
+    clientAddress:   inv.client_address || '',
+    paymentStatus:   inv.payment_status || 'Unpaid',
+    rows: products.map(p => ({
+      product: p.name  || '',
+      size:    p.size  || '',
+      qty:     p.qty   || 1,
+      price:   Number(p.price || 0),
+      total:   Number(p.total || 0),
+    })),
+    taxEnabled:      false,
+    discountEnabled: false,
+    taxRate:         0,
+    discountRate:    0,
+    taxAmt:          0,
+    discountAmt:     0,
+    subtotal:        subtotal,
+    grandTotal:      Number(inv.total_price || subtotal),
+    bankAccount:     inv.bank_account  || '',
+    bankVirtual:     inv.bank_virtual  || '',
+    termsText:       inv.terms_text    || '',
+    contactPhone:    inv.contact_phone || '',
+    contactEmail:    inv.contact_email || '',
+    contactWeb:      inv.contact_web   || '',
+    contactAddr:     inv.contact_addr  || '',
+    _isReprint:      true,
+    _reprintDate:    new Date().toISOString(),
+  };
+
+  // Track reprint count on this record (UI only — DB update optional)
+  inv._reprintCount = (inv._reprintCount || 0) + 1;
+  inv._lastReprint  = new Date().toISOString();
+
+  localStorage.setItem('nm_invoice_data', JSON.stringify(reprintData));
+  setTimeout(() => {
+    showToast('Opening reprint…', '');
+    window.open('invoice.html', '_blank');
+  }, 500);
+}
+
+/* ──────────────────────────────────────────
+   EDIT INVOICE
+────────────────────────────────────────── */
+function editInvoice(i) {
+  const inv = allData[i];
+  if (!inv) return;
+  editingRecord = { inv, i };
+
+  // Populate modal fields
+  document.getElementById('editClientName').value    = inv.client_name    || '';
+  document.getElementById('editClientPhone').value   = inv.client_number  || '';
+  document.getElementById('editClientAddress').value = inv.client_address || '';
+  document.getElementById('editInvoiceNumber').value = inv.invoice_number || '';
+  document.getElementById('editInvoiceDate').value   = inv.invoice_date   || '';
+  const dd = inv.due_date ? inv.due_date.split('T')[0] : '';
+  document.getElementById('editDueDate').value       = dd;
+  document.getElementById('editPaymentStatus').value = inv.payment_status || 'Unpaid';
+  document.getElementById('editTerms').value         = inv.terms_text     || '';
+  document.getElementById('editNotes').value         = inv.notes          || '';
+
+  // Load items
+  const products = Array.isArray(inv.product_details) ? inv.product_details : [];
+  editItems = products.map(p => ({
+    name:  p.name  || '',
+    size:  p.size  || '',
+    qty:   Number(p.qty   || 1),
+    price: Number(p.price || 0),
+    total: Number(p.total || 0),
+  }));
+  renderEditItems();
+
+  document.getElementById('editModal').classList.add('open');
+}
+
+function renderEditItems() {
+  const tbody = document.getElementById('editItemsBody');
+  tbody.innerHTML = editItems.map((item, idx) => `
+    <tr>
+      <td><input type="text"   value="${escHtml(item.name)}"  oninput="editItems[${idx}].name=this.value" placeholder="Product name"></td>
+      <td><input type="text"   value="${escHtml(item.size)}"  oninput="editItems[${idx}].size=this.value" placeholder="Size" style="width:70px"></td>
+      <td><input type="number" value="${item.qty}"  min="1" style="width:55px;text-align:center" oninput="editItems[${idx}].qty=Math.max(1,+this.value||1);updateEditTotals()"></td>
+      <td><input type="number" value="${item.price}" min="0" style="width:90px" oninput="editItems[${idx}].price=+this.value||0;updateEditTotals()"></td>
+      <td style="text-align:right;font-weight:600;color:var(--green-dark);white-space:nowrap;font-size:12px">${fmtMoney(item.price * item.qty)}</td>
+      <td><button class="btn-del-item" onclick="removeEditItem(${idx})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button></td>
+    </tr>`).join('');
+  updateEditTotals();
+}
+
+function removeEditItem(idx) {
+  editItems.splice(idx, 1);
+  renderEditItems();
+}
+
+function addEditItem() {
+  editItems.push({ name: '', size: '', qty: 1, price: 0, total: 0 });
+  renderEditItems();
+}
+
+function updateEditTotals() {
+  const sub = editItems.reduce((s, it) => s + it.price * it.qty, 0);
+  document.getElementById('editSubtotal').textContent   = fmtMoney(sub);
+  document.getElementById('editGrandTotal').textContent = fmtMoney(sub);
+  // Refresh total column
+  const rows = document.querySelectorAll('#editItemsBody tr');
+  rows.forEach((tr, idx) => {
+    const item = editItems[idx];
+    if (item) {
+      const totalCell = tr.querySelector('td:nth-child(5)');
+      if (totalCell) totalCell.textContent = fmtMoney(item.price * item.qty);
+    }
+  });
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+  editingRecord = null;
+  editItems = [];
+}
+
+async function saveEdit() {
+  if (!editingRecord) return;
+  const { inv, i } = editingRecord;
+
+  // Collect latest item values from inputs
+  document.querySelectorAll('#editItemsBody tr').forEach((tr, idx) => {
+    if (!editItems[idx]) return;
+    const inputs = tr.querySelectorAll('input');
+    editItems[idx].name  = inputs[0]?.value || editItems[idx].name;
+    editItems[idx].size  = inputs[1]?.value || editItems[idx].size;
+    editItems[idx].qty   = Math.max(1, parseInt(inputs[2]?.value) || 1);
+    editItems[idx].price = parseFloat(inputs[3]?.value) || 0;
+  });
+
+  const grandTotal = editItems.reduce((s, it) => s + it.price * it.qty, 0);
+  const payload = {
+    client_name:    document.getElementById('editClientName').value.trim(),
+    client_number:  document.getElementById('editClientPhone').value.trim(),
+    client_address: document.getElementById('editClientAddress').value.trim(),
+    invoice_number: document.getElementById('editInvoiceNumber').value.trim(),
+    invoice_date:   document.getElementById('editInvoiceDate').value.trim(),
+    due_date:       document.getElementById('editDueDate').value || null,
+    payment_status: document.getElementById('editPaymentStatus').value,
+    total_price:    grandTotal,
+    terms_text:     document.getElementById('editTerms').value.trim(),
+    notes:          document.getElementById('editNotes').value.trim(),
+    product_details: editItems.map(it => ({
+      name:  it.name,
+      size:  it.size,
+      qty:   it.qty,
+      price: it.price,
+      total: it.price * it.qty,
+    })),
+  };
+
+  showToast('Saving changes…', 'info');
+  try {
+    const res = await fetch(`${SUPABASE_URL_DV}/rest/v1/invoices?id=eq.${inv.id}`, {
+      method: 'PATCH',
+      headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    // Update local data
+    Object.assign(allData[i], payload);
+    allData[i].product_details = payload.product_details;
+    closeModal();
+    showToast('Invoice updated successfully!');
+    doSearch(); // refresh
+  } catch(e) {
+    showToast('Save failed: ' + e.message, 'error');
+  }
+}
+
+/* ──────────────────────────────────────────
+   UPDATE STATUS
+────────────────────────────────────────── */
+async function updateStatus(i) {
+  const inv    = allData[i];
+  const newSt  = document.getElementById(`statusSel-${i}`)?.value;
+  if (!inv || !newSt) return;
+
+  showToast('Updating status…', 'info');
+  try {
+    const res = await fetch(`${SUPABASE_URL_DV}/rest/v1/invoices?id=eq.${inv.id}`, {
+      method: 'PATCH',
+      headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ payment_status: newSt }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    allData[i].payment_status = newSt;
+    showToast(`Status updated to "${newSt}"`);
+    doSearch();
+  } catch(e) {
+    showToast('Update failed: ' + e.message, 'error');
+  }
+}
+
+/* ──────────────────────────────────────────
+   DUPLICATE INVOICE
+────────────────────────────────────────── */
+async function duplicateInvoice(i) {
+  const inv = allData[i];
+  if (!inv) return;
+
+  showToast('Creating duplicate…', 'info');
+
+  // Generate new invoice number
+  const stored  = localStorage.getItem('nm_inv_counter');
+  const nextNum = (stored ? parseInt(stored) : 122) + 1;
+  localStorage.setItem('nm_inv_counter', nextNum);
+  const newInvNum = 'INV-' + String(nextNum).padStart(6, '0');
+
+  const products = Array.isArray(inv.product_details) ? inv.product_details : [];
+  const subtotal = products.reduce((s, p) => s + Number(p.total || 0), 0);
+  const now      = new Date();
+  const fmtD     = d => d.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+
+  const dupData = {
+    invoiceNumber: newInvNum,
+    invoiceDate:   fmtD(now),
+    dueDate:       '',
+    clientName:    inv.client_name    || '',
+    clientPhone:   inv.client_number  || '',
+    clientAddress: inv.client_address || '',
+    paymentStatus: 'Unpaid',
+    rows: products.map(p => ({
+      product: p.name  || '',
+      size:    p.size  || '',
+      qty:     p.qty   || 1,
+      price:   Number(p.price || 0),
+      total:   Number(p.total || 0),
+    })),
+    taxEnabled: false, discountEnabled: false,
+    taxRate: 0, discountRate: 0, taxAmt: 0, discountAmt: 0,
+    subtotal, grandTotal: subtotal,
+  };
+
+  localStorage.setItem('nm_invoice_data', JSON.stringify(dupData));
+  showToast(`Duplicate created as ${newInvNum}. Opening editor…`);
+  setTimeout(() => window.open('index.html', '_blank'), 700);
+}
+
+/* ──────────────────────────────────────────
+   DOWNLOAD PDF (print to PDF via new window)
+────────────────────────────────────────── */
+function downloadPDF(i) {
+  const inv = allData[i];
+  if (!inv) return;
+
+  const products = Array.isArray(inv.product_details) ? inv.product_details : [];
+  const subtotal = products.reduce((s, p) => s + Number(p.total || 0), 0);
+
+  const pdfData = {
+    invoiceNumber: inv.invoice_number || '',
+    invoiceDate:   inv.invoice_date   || '',
+    dueDate:       inv.due_date       || '',
+    clientName:    inv.client_name    || '',
+    clientPhone:   inv.client_number  || '',
+    clientAddress: inv.client_address || '',
+    paymentStatus: inv.payment_status || 'Unpaid',
+    rows: products.map(p => ({
+      product: p.name  || '',
+      size:    p.size  || '',
+      qty:     p.qty   || 1,
+      price:   Number(p.price || 0),
+      total:   Number(p.total || 0),
+    })),
+    taxEnabled: false, discountEnabled: false,
+    taxRate: 0, discountRate: 0, taxAmt: 0, discountAmt: 0,
+    subtotal,
+    grandTotal: Number(inv.total_price || subtotal),
+    bankAccount: inv.bank_account || '',
+    bankVirtual: inv.bank_virtual || '',
+    termsText:   inv.terms_text   || '',
+    _pdfMode: true,
+  };
+
+  localStorage.setItem('nm_invoice_data', JSON.stringify(pdfData));
+  showToast('Opening print-to-PDF view…', 'info');
+  const win = window.open('invoice.html', '_blank');
+  // Auto-trigger print dialog after short delay (user can Save as PDF)
+  if (win) {
+    win.addEventListener('load', () => {
+      setTimeout(() => win.print(), 800);
+    });
+  }
+}
+
+/* ──────────────────────────────────────────
+   DELETE INVOICE
+────────────────────────────────────────── */
+function deleteInvoice(i) {
+  const inv = allData[i];
+  if (!inv) return;
+
+  document.getElementById('confirmMsg').textContent =
+    `Delete invoice ${inv.invoice_number} for ${inv.client_name}? This cannot be undone.`;
+
+  confirmCb = async () => {
+    closeConfirm();
+    showToast('Deleting…', 'info');
+    try {
+      const res = await fetch(`${SUPABASE_URL_DV}/rest/v1/invoices?id=eq.${inv.id}`, {
+        method: 'DELETE',
+        headers: sbHeaders,
+      });
+      if (!res.ok) throw new Error(await res.text());
+      allData.splice(i, 1);
+      expandedRow = null;
+      renderTable(allData);
+      showToast('Invoice deleted.');
+    } catch(e) {
+      showToast('Delete failed: ' + e.message, 'error');
+    }
+  };
+
+  document.getElementById('confirmYesBtn').onclick = confirmCb;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('open');
+  confirmCb = null;
+}
+
+/* ──────────────────────────────────────────
+   SEARCH / LOAD
+────────────────────────────────────────── */
 async function doSearch() {
   const search = document.getElementById('searchInput').value.trim();
   const type   = document.getElementById('searchType').value;
   const tbody  = document.getElementById('tableBody');
   expandedRow  = null;
 
-  tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><span class="loading-spinner"></span> Searching…</div></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="7"><div class="state-box"><span class="loading-spinner"></span> Loading invoices…</div></td></tr>`;
 
   const result = await fetchInvoices({ search, searchType: type });
   if (result.success) {
     allData = result.data;
     renderTable(allData);
   } else {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="state-box"><h3>Error</h3><p>${result.error || 'Could not load data.'}</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7"><div class="state-box"><h3>Connection Error</h3><p>${result.error || 'Could not load invoices.'}</p></div></td></tr>`;
     document.getElementById('resultsCount').textContent = '';
   }
 }
@@ -535,10 +1547,23 @@ function clearSearch() {
 
 function debouncedSearch() {
   clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(doSearch, 400);
+  debounceTimer = setTimeout(doSearch, 420);
 }
 
-// Initial load
+// Close modals on overlay click
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('confirmModal').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+// ESC key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+
+// Init
 doSearch();
 </script>
 </body>
